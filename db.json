@@ -1,0 +1,373 @@
+{
+  "tutors": [
+    {
+      "id": "tut-1",
+      "name": "Anish Kumar Sharma",
+      "avatar": "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=300&q=80",
+      "rating": 4.9,
+      "reviewsCount": 42,
+      "title": "Senior Mathematics & Physics Specialist",
+      "qualification": "M.Sc Physics (BIT Mesra), B.Ed",
+      "experienceYears": 8,
+      "subjects": [
+        "Mathematics",
+        "Physics",
+        "Vedic Maths"
+      ],
+      "boards": [
+        "CBSE",
+        "ICSE/ISC",
+        "JAC"
+      ],
+      "cities": [
+        "Ranchi",
+        "Ramgarh"
+      ],
+      "localities": [
+        "Lalpur",
+        "Harmu",
+        "Kanke Road",
+        "Bariatu",
+        "Doranda"
+      ],
+      "pricePerHour": 350,
+      "pricePerMonth": 3500,
+      "gender": "Male",
+      "mode": "Home Tuition",
+      "bio": "Specialized in transforming Math & Physics fear into top board marks for Class 9-12 students. 100% focus on conceptual clarity and numerical speed techniques.",
+      "verified": true,
+      "phone": "+91 83405 43395",
+      "badge": "★ Top Rated Tutor",
+      "badgeColor": "bg-amber-100 text-amber-800 border-amber-300",
+      "classesHandled": [
+        "Class 8",
+        "Class 9",
+        "Class 10",
+        "Class 11 (PCM)",
+        "Class 12 (PCM)"
+      ],
+      "demoClassAvailable": true
+    },
+    {
+      "id": "tut-2",
+      "name": "Priya Mukherjee",
+      "avatar": "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&q=80",
+      "rating": 5,
+      "reviewsCount": 38,
+      "title": "Biology & Chemistry Educator",
+      "qualification": "M.Sc Biotechnology (Patna University), Gold Medalist",
+      "experienceYears": 6,
+      "subjects": [
+        "Biology",
+        "Chemistry",
+        "Science",
+        "EVS"
+      ],
+      "boards": [
+        "CBSE",
+        "ICSE/ISC",
+        "BSEB"
+      ],
+      "cities": [
+        "Patna",
+        "Ranchi"
+      ],
+      "localities": [
+        "Boring Road",
+        "Kankerbagh",
+        "Bailey Road",
+        "Rajendra Nagar"
+      ],
+      "pricePerHour": 300,
+      "pricePerMonth": 3200,
+      "gender": "Female",
+      "mode": "Home Tuition",
+      "bio": "Passionate female educator specializing in Class 6-12 Science, Chemistry & Biology. Proven track record of helping students secure 95%+ in ICSE & CBSE board exams.",
+      "verified": true,
+      "phone": "+91 83405 43395",
+      "badge": "Female Tutor Preferred",
+      "badgeColor": "bg-rose-100 text-rose-800 border-rose-300",
+      "classesHandled": [
+        "Class 6-8 Science",
+        "Class 9-10 Science",
+        "Class 11-12 PCB"
+      ],
+      "demoClassAvailable": true
+    },
+    {
+      "id": "tut-3",
+      "name": "Rajesh Verma",
+      "avatar": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&q=80",
+      "rating": 4.8,
+      "reviewsCount": 56,
+      "title": "IIT-JEE Physics & Maths Coach",
+      "qualification": "B.Tech Mechanical (IIT Kharagpur)",
+      "experienceYears": 10,
+      "subjects": [
+        "Physics",
+        "Mathematics",
+        "IIT-JEE Prep"
+      ],
+      "boards": [
+        "CBSE",
+        "ICSE/ISC"
+      ],
+      "cities": [
+        "Jamshedpur",
+        "Ranchi",
+        "Dhanbad"
+      ],
+      "localities": [
+        "Bistupur",
+        "Sakchi",
+        "Telco",
+        "Sonari",
+        "Kadma"
+      ],
+      "pricePerHour": 500,
+      "pricePerMonth": 5500,
+      "gender": "Male",
+      "mode": "Home Tuition",
+      "bio": "Ex-Aakash Faculty with 10 years of experience coaching students for JEE Main/Advanced and Class 11-12 Boards. Analytical step-by-step problem solving.",
+      "verified": true,
+      "phone": "+91 83405 43395",
+      "badge": "Ex-IITian Coach",
+      "badgeColor": "bg-indigo-100 text-indigo-800 border-indigo-300",
+      "classesHandled": [
+        "Class 11 (PCM)",
+        "Class 12 (PCM)",
+        "IIT-JEE Main/Adv"
+      ],
+      "demoClassAvailable": true
+    },
+    {
+      "id": "tut-4",
+      "name": "Sunita Sinha",
+      "avatar": "https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=300&q=80",
+      "rating": 4.9,
+      "reviewsCount": 29,
+      "title": "Primary & Middle School Foundation Expert",
+      "qualification": "B.A English (Hons), Montessori Trained, B.Ed",
+      "experienceYears": 7,
+      "subjects": [
+        "English Literature",
+        "Grammar",
+        "All Subjects (Class 1-5)",
+        "Social Studies"
+      ],
+      "boards": [
+        "CBSE",
+        "ICSE/ISC",
+        "JAC",
+        "BSEB"
+      ],
+      "cities": [
+        "Ranchi",
+        "Bokaro"
+      ],
+      "localities": [
+        "Lalpur",
+        "Hinoo",
+        "Ashok Nagar",
+        "Bariatu"
+      ],
+      "pricePerHour": 250,
+      "pricePerMonth": 2800,
+      "gender": "Female",
+      "mode": "Home Tuition",
+      "bio": "Gentle, patient, and engaging foundation specialist for young minds (Class 1 to 8). Special focus on reading fluency, handwriting, math basics, and daily homework guidance.",
+      "verified": true,
+      "phone": "+91 83405 43395",
+      "badge": "Child Friendly Specialist",
+      "badgeColor": "bg-emerald-100 text-emerald-800 border-emerald-300",
+      "classesHandled": [
+        "Class 1-5 All Subjects",
+        "Class 6-8 English & SST"
+      ],
+      "demoClassAvailable": true
+    },
+    {
+      "id": "tut-5",
+      "name": "Dr. Vivek Kumar Roy",
+      "avatar": "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=300&q=80",
+      "rating": 5,
+      "reviewsCount": 64,
+      "title": "NEET Biology & Chemistry Specialist",
+      "qualification": "Ph.D in Botany, M.Sc Chemistry",
+      "experienceYears": 12,
+      "subjects": [
+        "Biology",
+        "NEET Prep",
+        "Organic Chemistry"
+      ],
+      "boards": [
+        "CBSE",
+        "ICSE/ISC",
+        "JAC",
+        "BSEB"
+      ],
+      "cities": [
+        "Patna",
+        "Gaya",
+        "Ranchi"
+      ],
+      "localities": [
+        "Kankerbagh",
+        "Boring Canal Road",
+        "Rajendra Nagar"
+      ],
+      "pricePerHour": 450,
+      "pricePerMonth": 4800,
+      "gender": "Male",
+      "mode": "Home Tuition",
+      "bio": "Guided over 120+ medical aspirants into top GMC colleges. Thorough NCERT line-by-line coverage and daily practice question drills for 360/360 score in NEET Bio.",
+      "verified": true,
+      "phone": "+91 83405 43395",
+      "badge": "NEET Master Mentor",
+      "badgeColor": "bg-blue-100 text-blue-800 border-blue-300",
+      "classesHandled": [
+        "Class 11 PCB",
+        "Class 12 PCB",
+        "NEET Target Batch"
+      ],
+      "demoClassAvailable": true
+    },
+    {
+      "id": "tut-6",
+      "name": "Suman Lata Singh",
+      "avatar": "https://images.unsplash.com/photo-1580489944761-15a19d654956?auto=format&fit=crop&w=300&q=80",
+      "rating": 4.8,
+      "reviewsCount": 31,
+      "title": "Commerce & Economics Faculty",
+      "qualification": "M.Com (Finance), CA Intermediate",
+      "experienceYears": 9,
+      "subjects": [
+        "Accountancy",
+        "Economics",
+        "Business Studies",
+        "Maths"
+      ],
+      "boards": [
+        "CBSE",
+        "ICSE/ISC"
+      ],
+      "cities": [
+        "Dhanbad",
+        "Bokaro",
+        "Ranchi"
+      ],
+      "localities": [
+        "Bank More",
+        "Saraidhela",
+        "Hirapur",
+        "Steel Gate"
+      ],
+      "pricePerHour": 350,
+      "pricePerMonth": 3600,
+      "gender": "Female",
+      "mode": "Both",
+      "bio": "Expert Commerce teacher simplifying complex Accountancy journal entries, balance sheets, and Economics macro/micro graphs. Practical real-world examples for quick grasp.",
+      "verified": true,
+      "phone": "+91 83405 43395",
+      "badge": "Commerce Specialist",
+      "badgeColor": "bg-purple-100 text-purple-800 border-purple-300",
+      "classesHandled": [
+        "Class 11 Commerce",
+        "Class 12 Commerce"
+      ],
+      "demoClassAvailable": true
+    },
+    {
+      "id": "tut-7",
+      "name": "Amitabh Sen",
+      "avatar": "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=300&q=80",
+      "rating": 4.9,
+      "reviewsCount": 47,
+      "title": "Computer Science, Python & ICSE Java Mentor",
+      "qualification": "MCA (NIT Jamshedpur)",
+      "experienceYears": 7,
+      "subjects": [
+        "Computer Science",
+        "Python",
+        "Java (ICSE/ISC)",
+        "Informatics Practices"
+      ],
+      "boards": [
+        "CBSE",
+        "ICSE/ISC",
+        "IB/IGCSE"
+      ],
+      "cities": [
+        "Jamshedpur",
+        "Kolkata",
+        "Ranchi"
+      ],
+      "localities": [
+        "Bistupur",
+        "Kadma",
+        "Telco"
+      ],
+      "pricePerHour": 350,
+      "pricePerMonth": 3800,
+      "gender": "Male",
+      "mode": "Both",
+      "bio": "Simplifying Java algorithms, OOP concepts, Python syntax, and SQL databases for Class 9 to 12 students. Practical coding sessions right at student home desktop.",
+      "verified": true,
+      "phone": "+91 83405 43395",
+      "badge": "Tech & Coding Tutor",
+      "badgeColor": "bg-cyan-100 text-cyan-800 border-cyan-300",
+      "classesHandled": [
+        "Class 9-10 ICSE Java",
+        "Class 11-12 Computer Science (Python/SQL)"
+      ],
+      "demoClassAvailable": true
+    },
+    {
+      "id": "tut-8",
+      "name": "Ritu Raj",
+      "avatar": "https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&w=300&q=80",
+      "rating": 4.9,
+      "reviewsCount": 24,
+      "title": "JAC & BSEB State Board Specialist",
+      "qualification": "M.A Hindi & SST (Ranchi University), B.Ed",
+      "experienceYears": 10,
+      "subjects": [
+        "Social Science (SST)",
+        "Hindi",
+        "Sanskrit",
+        "All Subjects (1-8)"
+      ],
+      "boards": [
+        "JAC",
+        "BSEB",
+        "CBSE"
+      ],
+      "cities": [
+        "Ranchi",
+        "Patna",
+        "Hazaribagh"
+      ],
+      "localities": [
+        "Kokar",
+        "Kantatoli",
+        "Namkum",
+        "Morabadi"
+      ],
+      "pricePerHour": 220,
+      "pricePerMonth": 2500,
+      "gender": "Female",
+      "mode": "Home Tuition",
+      "bio": "Decades of experience in JAC (Jharkhand Board) and BSEB (Bihar Board) syllabus pattern. Ensures complete textbook answer writing skills for high board percentages.",
+      "verified": true,
+      "phone": "+91 83405 43395",
+      "badge": "State Board Guru",
+      "badgeColor": "bg-teal-100 text-teal-800 border-teal-300",
+      "classesHandled": [
+        "Class 1-10 JAC/BSEB Board"
+      ],
+      "demoClassAvailable": true
+    }
+  ],
+  "parentRequests": [],
+  "tutorApplications": []
+}
