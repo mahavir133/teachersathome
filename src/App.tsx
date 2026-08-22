@@ -239,7 +239,7 @@ export default function App() {
       {/* Floating Action Bar for Mobile */}
       <div className="fixed bottom-4 right-4 z-40 md:hidden flex items-center gap-2">
         <a
-          href="https://wa.me/919334349207?text=Hello%20Teachers%20At%20Home"
+          href="https://wa.me/918340543395?text=Hello%20Teachers%20At%20Home"
           target="_blank"
           rel="noopener noreferrer"
           className="p-3 bg-emerald-500 text-white rounded-full shadow-lg hover:scale-105 transition-transform"

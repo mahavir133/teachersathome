@@ -36,7 +36,7 @@ export const ContactSection: React.FC = () => {
             <div className="space-y-4 pt-2">
               
               <a
-                href="tel:+919334349207"
+                href="tel:+918340543395"
                 className="flex items-center gap-4 p-4 bg-[#3D441E]/60 hover:bg-[#3D441E] rounded-2xl border border-[#5C6348] transition-colors group cursor-pointer"
               >
                 <div className="w-12 h-12 rounded-xl bg-[#708238] text-white flex items-center justify-center font-bold shrink-0">
@@ -45,13 +45,13 @@ export const ContactSection: React.FC = () => {
                 <div>
                   <div className="text-xs font-semibold text-[#D1D5CB]">Direct Phone Support</div>
                   <div className="text-lg font-black text-white group-hover:text-[#E9EDDE] transition-colors">
-                    +91 93343 49207
+                    +91 83405 43395
                   </div>
                 </div>
               </a>
 
               <a
-                href="https://wa.me/919334349207?text=Hello%20Teachers%20At%20Home,%20I%20have%20an%20inquiry%20regarding%20home%20tuition."
+                href="https://wa.me/918340543395?text=Hello%20Teachers%20At%20Home,%20I%20have%20an%20inquiry%20regarding%20home%20tuition."
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex items-center gap-4 p-4 bg-[#708238]/20 hover:bg-[#708238]/30 rounded-2xl border border-[#708238]/40 transition-colors group cursor-pointer"
@@ -62,7 +62,7 @@ export const ContactSection: React.FC = () => {
                 <div>
                   <div className="text-xs font-semibold text-[#E9EDDE]">Instant WhatsApp Chat</div>
                   <div className="text-lg font-black text-white group-hover:text-[#E9EDDE] transition-colors">
-                    +91 93343 49207
+                    +91 83405 43395
                   </div>
                 </div>
               </a>

@@ -68,7 +68,7 @@ export const WhyChooseUs: React.FC = () => {
 
           <div className="shrink-0 flex items-center gap-3">
             <a 
-              href="tel:+919334349207"
+              href="tel:+918340543395"
               className="px-6 py-3 bg-[#708238] hover:bg-[#5A692D] text-white text-xs font-black rounded-full shadow-md transition-colors flex items-center gap-2"
             >
               <span>Speak to Academic Counselor</span>

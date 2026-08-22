@@ -31,15 +31,15 @@ export const Footer: React.FC<FooterProps> = ({ onRequestTutor, onBecomeTutor, o
 
             <div className="pt-2 flex flex-wrap gap-3">
               <a
-                href="tel:+919334349207"
+                href="tel:+918340543395"
                 className="px-3.5 py-2 bg-indigo-900/60 hover:bg-indigo-900 border border-indigo-700/50 text-white rounded-lg font-bold flex items-center gap-1.5 transition-colors"
               >
                 <Phone className="w-3.5 h-3.5 text-amber-400" />
-                <span>+91 93343 49207</span>
+                <span>+91 83405 43395</span>
               </a>
 
               <a
-                href="https://wa.me/919334349207?text=Hello%20Teachers%20At%20Home"
+                href="https://wa.me/918340543395?text=Hello%20Teachers%20At%20Home"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="px-3.5 py-2 bg-emerald-950/60 hover:bg-emerald-900 border border-emerald-700/50 text-emerald-300 rounded-lg font-bold flex items-center gap-1.5 transition-colors"
@@ -97,7 +97,7 @@ export const Footer: React.FC<FooterProps> = ({ onRequestTutor, onBecomeTutor, o
         {/* Bottom copyright */}
         <div className="mt-12 pt-6 border-t border-slate-900 flex flex-col sm:flex-row items-center justify-between gap-4 text-slate-500 text-[11px]">
           <div>
-            © {new Date().getFullYear()} <strong>Teachers At Home</strong> (Inspired by My Home Tuition network). All rights reserved.
+            © {new Date().getFullYear()} <strong>Teachers At Home</strong>. All rights reserved and designed and developed by TirkeyTrix Tech Solutions.
           </div>
 
           <div className="flex items-center gap-1 text-slate-400">

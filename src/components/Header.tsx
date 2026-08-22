@@ -47,14 +47,14 @@ export const Header: React.FC<HeaderProps> = ({
 
           <div className="flex items-center gap-4 text-xs font-semibold">
             <a 
-              href="tel:+919334349207" 
+              href="tel:+918340543395" 
               className="flex items-center gap-1 hover:text-[#E9EDDE] transition-colors"
             >
               <Phone className="w-3.5 h-3.5 text-[#708238]" />
-              <span>Call: +91 93343 49207</span>
+              <span>Call: +91 83405 43395</span>
             </a>
             <a 
-              href="https://wa.me/919334349207?text=Hello%20Teachers%20At%20Home,%20I%20need%20a%20home%20tutor%20for%20my%20child." 
+              href="https://wa.me/918340543395?text=Hello%20Teachers%20At%20Home,%20I%20need%20a%20home%20tutor%20for%20my%20child." 
               target="_blank" 
               rel="noopener noreferrer"
               className="flex items-center gap-1 text-[#E9EDDE] hover:text-white transition-colors"
