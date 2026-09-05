@@ -4,8 +4,8 @@ import { Tutor, ParentRequest, TutorApplication, User } from './src/types.js';
 export const pool = mysql.createPool({
   host: process.env.DB_HOST || 'localhost',
   user: process.env.DB_USER || 'root',
-  password: process.env.DB_PASSWORD || 'Toor$3210!',
-  database: process.env.DB_NAME || 'teachersathome',
+  password: process.env.DB_PASSWORD || 'Teachers@2026',
+  database: process.env.DB_NAME || 'u488257575_teachersathome',
   waitForConnections: true,
   connectionLimit: 10,
   queueLimit: 0
