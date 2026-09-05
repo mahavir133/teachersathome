@@ -2,6 +2,7 @@ import { GoogleGenAI } from "@google/genai";
 import { Tutor } from "./src/types.js";
 import express from "express";
 import path from "path";
+import fs from "fs";
 import { createServer as createViteServer } from "vite";
 
 // Load environment variables natively in Node 20+
@@ -555,19 +556,26 @@ app.get("/api/tutor/fees", authenticateToken, async (req, res) => {
 
 // Vite middleware setup
 async function startServer() {
-  const PORT = process.env.PORT || 3000;
-  if (process.env.NODE_ENV !== "production") {
+  const PORT = process.env.PORT ? parseInt(process.env.PORT, 10) : 3000;
+  const distPath = path.join(process.cwd(), "dist");
+  const hasDist = fs.existsSync(path.join(distPath, "index.html"));
+
+  if (process.env.NODE_ENV === "production" || hasDist) {
+    console.log(`Serving static production build from ${distPath}`);
+    app.use(express.static(distPath));
+    app.get("*", (req, res, next) => {
+      if (req.path.startsWith("/api")) {
+        return next();
+      }
+      res.sendFile(path.join(distPath, "index.html"));
+    });
+  } else {
+    console.log("Starting Vite development server middleware");
     const vite = await createViteServer({
       server: { middlewareMode: true },
       appType: "spa",
     });
     app.use(vite.middlewares);
-  } else {
-    const distPath = path.join(process.cwd(), "dist");
-    app.use(express.static(distPath));
-    app.get("*", (_req, res) => {
-      res.sendFile(path.join(distPath, "index.html"));
-    });
   }
 
   app.listen(PORT, "0.0.0.0", () => {
