@@ -3,7 +3,6 @@ import { Tutor } from "./src/types.js";
 import express from "express";
 import path from "path";
 import fs from "fs";
-import { createServer as createViteServer } from "vite";
 
 // Load environment variables natively in Node 20+
 try {
@@ -563,6 +562,7 @@ app.use(express.static(distPath));
 
 if (process.env.NODE_ENV !== "production" && !fs.existsSync(path.join(distPath, "index.html"))) {
   console.log("Starting Vite development server middleware");
+  const { createServer: createViteServer } = await import("vite");
   const vite = await createViteServer({
     server: { middlewareMode: true },
     appType: "spa",
