@@ -554,33 +554,31 @@ app.get("/api/tutor/fees", authenticateToken, async (req, res) => {
   }
 });
 
-// Vite middleware setup
-async function startServer() {
-  const PORT = process.env.PORT ? parseInt(process.env.PORT, 10) : 3000;
-  const distPath = path.join(process.cwd(), "dist");
-  const hasDist = fs.existsSync(path.join(distPath, "index.html"));
+// Static assets & Vite middleware setup
+const distPath = path.join(process.cwd(), "dist");
 
-  if (process.env.NODE_ENV === "production" || hasDist) {
-    console.log(`Serving static production build from ${distPath}`);
-    app.use(express.static(distPath));
-    app.get("*", (req, res, next) => {
-      if (req.path.startsWith("/api")) {
-        return next();
-      }
-      res.sendFile(path.join(distPath, "index.html"));
-    });
-  } else {
-    console.log("Starting Vite development server middleware");
-    const vite = await createViteServer({
-      server: { middlewareMode: true },
-      appType: "spa",
-    });
-    app.use(vite.middlewares);
-  }
+// Serve static files from dist directory
+app.use(express.static(distPath));
 
-  app.listen(PORT, "0.0.0.0", () => {
-    console.log(`Teachers At Home Server running on http://0.0.0.0:${PORT}`);
+if (process.env.NODE_ENV !== "production" && !fs.existsSync(path.join(distPath, "index.html"))) {
+  console.log("Starting Vite development server middleware");
+  const vite = await createViteServer({
+    server: { middlewareMode: true },
+    appType: "spa",
+  });
+  app.use(vite.middlewares);
+} else {
+  console.log(`Serving static production build from ${distPath}`);
+  // SPA fallback for client-side routing
+  app.get("*", (req, res, next) => {
+    if (req.path.startsWith("/api")) {
+      return next();
+    }
+    res.sendFile(path.join(distPath, "index.html"));
   });
 }
 
-startServer();
+const PORT = process.env.PORT ? parseInt(process.env.PORT, 10) : 3000;
+app.listen(PORT, "0.0.0.0", () => {
+  console.log(`Teachers At Home Server running on http://0.0.0.0:${PORT}`);
+});
