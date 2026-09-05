@@ -16,6 +16,18 @@ export type TeachingModeType = 'Home Tuition' | 'Online 1-on-1' | 'Both';
 
 export type GenderPreference = 'Any' | 'Female Tutor' | 'Male Tutor';
 
+export type UserRole = 'ADMIN' | 'TUTOR' | 'PARENT';
+export type UserStatus = 'PENDING' | 'ACTIVE' | 'REJECTED';
+
+export interface User {
+  id: string;
+  email: string;
+  password_hash: string;
+  role: UserRole;
+  status: UserStatus;
+  createdAt: string;
+}
+
 export interface Tutor {
   id: string;
   name: string;
@@ -110,4 +122,36 @@ export interface AIChatMessage {
   sender: 'user' | 'assistant';
   text: string;
   timestamp: string;
+}
+
+export interface Assignment {
+  id: string;
+  tutor_id: string;
+  request_id: string;
+  fee_agreed: number;
+  assigned_date: string;
+  status: 'Active' | 'Completed' | 'Cancelled';
+  
+  // Joined fields for convenience
+  tutorName?: string;
+  parentName?: string;
+  parentPhone?: string;
+  subjects?: string[];
+  city?: string;
+}
+
+export interface FeeCollection {
+  id: string;
+  assignment_id: string;
+  month_year: string; // e.g., '2026-09'
+  amount: number;
+  payment_date: string;
+  payment_mode: string;
+  status: 'Paid' | 'Pending';
+  txn_id?: string;
+
+  // Joined fields
+  parentName?: string;
+  studentName?: string;
+  tutorName?: string;
 }

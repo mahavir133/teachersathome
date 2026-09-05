@@ -8,6 +8,7 @@ interface FeeCalculatorProps {
     board: BoardType;
     city: string;
     phone: string;
+    studentName?: string;
     notes?: string;
   }) => void;
 }
@@ -19,6 +20,7 @@ export const FeeCalculator: React.FC<FeeCalculatorProps> = ({ onRequestDemoWithD
   const [tutorTier, setTutorTier] = useState<'standard' | 'experienced' | 'senior'>('experienced');
   const [city, setCity] = useState('Ranchi');
   const [phoneInput, setPhoneInput] = useState('');
+  const [studentName, setStudentName] = useState('');
   const [showBookForm, setShowBookForm] = useState(false);
 
   // Calculation Logic
@@ -228,24 +230,33 @@ export const FeeCalculator: React.FC<FeeCalculatorProps> = ({ onRequestDemoWithD
             {/* Quick Lock Estimate Input */}
             <div className="pt-2">
               <label className="block text-xs font-bold text-[#E9EDDE] mb-1">
-                Enter Mobile Number to Lock Estimate & Book Free Demo
+                Enter Student Name & Mobile to Book Free Demo
               </label>
-              <div className="flex gap-2">
+              <div className="flex flex-col gap-2">
                 <input
-                  type="tel"
-                  placeholder="10-digit Phone"
-                  value={phoneInput}
-                  onChange={(e) => setPhoneInput(e.target.value)}
-                  maxLength={10}
-                  className="flex-1 bg-[#FAF9F6] text-[#2C3317] px-3 py-2.5 rounded-full text-xs font-bold focus:outline-none"
+                  type="text"
+                  placeholder="Student's Name"
+                  value={studentName}
+                  onChange={(e) => setStudentName(e.target.value)}
+                  className="w-full bg-[#FAF9F6] text-[#2C3317] px-3 py-2.5 rounded-full text-xs font-bold focus:outline-none"
                 />
-                <button
-                  type="button"
-                  onClick={handleBookEstimate}
-                  className="bg-[#708238] hover:bg-[#5A692D] text-white font-black text-xs px-5 py-2.5 rounded-full transition-colors cursor-pointer shrink-0"
-                >
-                  Get Demo
-                </button>
+                <div className="flex gap-2">
+                  <input
+                    type="tel"
+                    placeholder="10-digit Phone"
+                    value={phoneInput}
+                    onChange={(e) => setPhoneInput(e.target.value)}
+                    maxLength={10}
+                    className="flex-1 bg-[#FAF9F6] text-[#2C3317] px-3 py-2.5 rounded-full text-xs font-bold focus:outline-none"
+                  />
+                  <button
+                    type="button"
+                    onClick={handleBookEstimate}
+                    className="bg-[#708238] hover:bg-[#5A692D] text-white font-black text-xs px-5 py-2.5 rounded-full transition-colors cursor-pointer shrink-0"
+                  >
+                    Get Demo
+                  </button>
+                </div>
               </div>
             </div>
 

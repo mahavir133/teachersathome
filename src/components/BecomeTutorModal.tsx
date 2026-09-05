@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { X, CheckCircle2, UserCheck, ShieldCheck, GraduationCap, Briefcase } from 'lucide-react';
 import { BoardType, TeachingModeType } from '../types';
 
+import { useAuth } from '../AuthContext';
+
 interface BecomeTutorModalProps {
   isOpen: boolean;
   onClose: () => void;
@@ -9,6 +11,7 @@ interface BecomeTutorModalProps {
 }
 
 export const BecomeTutorModal: React.FC<BecomeTutorModalProps> = ({ isOpen, onClose, onSuccessSubmit }) => {
+  const { token } = useAuth();
   const [fullName, setFullName] = useState('');
   const [phone, setPhone] = useState('');
   const [email, setEmail] = useState('');
@@ -63,9 +66,13 @@ export const BecomeTutorModal: React.FC<BecomeTutorModalProps> = ({ isOpen, onCl
     };
 
     try {
+      const headers: any = { 'Content-Type': 'application/json' };
+      if (token) {
+        headers['Authorization'] = `Bearer ${token}`;
+      }
       const res = await fetch('/api/tutor-apply', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers,
         body: JSON.stringify(payload)
       });
       const data = await res.json();

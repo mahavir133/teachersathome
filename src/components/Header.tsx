@@ -1,12 +1,14 @@
 import React, { useState } from 'react';
-import { GraduationCap, Phone, MessageSquare, PlusCircle, UserPlus, Sparkles, BookOpen, Clock, Menu, X, CheckCircle2 } from 'lucide-react';
+import { GraduationCap, Phone, MessageSquare, PlusCircle, UserPlus, Sparkles, BookOpen, Clock, Menu, X, CheckCircle2, User, LogIn } from 'lucide-react';
+import { useAuth } from '../AuthContext';
+import { useNavigate } from 'react-router-dom';
 
 interface HeaderProps {
   onRequestTutor: () => void;
   onBecomeTutor: () => void;
-  onOpenAIAdvisor: () => void;
   onOpenMyRequests: () => void;
   onOpenAdmin: () => void;
+  onOpenAuth: () => void;
   activeSection: string;
   setActiveSection: (section: string) => void;
   myRequestsCount: number;
@@ -15,14 +17,16 @@ interface HeaderProps {
 export const Header: React.FC<HeaderProps> = ({
   onRequestTutor,
   onBecomeTutor,
-  onOpenAIAdvisor,
   onOpenMyRequests,
   onOpenAdmin,
+  onOpenAuth,
   activeSection,
   setActiveSection,
   myRequestsCount
 }) => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const { user, logout } = useAuth();
+  const navigate = useNavigate();
 
   const scrollTo = (id: string) => {
     setActiveSection(id);
@@ -73,22 +77,7 @@ export const Header: React.FC<HeaderProps> = ({
           onClick={() => scrollTo('hero')} 
           className="flex items-center gap-3 cursor-pointer group"
         >
-          <div className="w-11 h-11 rounded-xl bg-[#708238] flex items-center justify-center text-white shadow-sm group-hover:bg-[#5A692D] transition-transform">
-            <GraduationCap className="w-6 h-6" />
-          </div>
-          <div>
-            <div className="flex items-center gap-1.5">
-              <span className="text-xl font-extrabold text-[#2C3317] tracking-tight">
-                Teachers<span className="text-[#708238]">AtHome</span>
-              </span>
-              <span className="text-[10px] font-bold bg-[#E9EDDE] text-[#2C3317] px-1.5 py-0.5 rounded-md uppercase">
-                India
-              </span>
-            </div>
-            <p className="text-[11px] text-[#5C6348] font-medium">
-              Verified 1-on-1 Home Tutors • Ranchi, Patna & Pan-India
-            </p>
-          </div>
+          <img src="/logo.png" alt="Teachers At Home Logo" className="h-14 w-auto object-contain transition-transform group-hover:scale-105" />
         </div>
 
         {/* Desktop Navigation Links */}
@@ -139,33 +128,22 @@ export const Header: React.FC<HeaderProps> = ({
 
         {/* Action Buttons */}
         <div className="hidden md:flex items-center gap-3">
-          <button
-            onClick={onOpenAdmin}
-            className="flex items-center gap-1.5 px-3.5 py-2 text-xs font-extrabold text-white bg-indigo-950 hover:bg-indigo-900 border border-indigo-900 rounded-full transition-colors cursor-pointer"
-            title="Operational Console"
-          >
-            <span>Admin Console</span>
-          </button>
-
-          <button
-            onClick={onOpenAIAdvisor}
-            className="flex items-center gap-1.5 px-3.5 py-2 text-xs font-bold text-[#2C3317] bg-[#E9EDDE] hover:bg-[#D1D5CB] border border-[#D1D5CB] rounded-full transition-colors cursor-pointer"
-            title="AI Study & Fee Advisor"
-          >
-            <Sparkles className="w-3.5 h-3.5 text-[#708238]" />
-            <span>AI Advisor</span>
-          </button>
-
-          {myRequestsCount > 0 && (
+          {user ? (
             <button
-              onClick={onOpenMyRequests}
-              className="relative flex items-center gap-1.5 px-3.5 py-2 text-xs font-bold text-[#2C3317] bg-[#F2F4EF] hover:bg-[#E2E6D5] border border-[#E6E8E1] rounded-full transition-colors"
+              onClick={() => navigate('/dashboard')}
+              className="flex items-center gap-1.5 px-3.5 py-2 text-xs font-extrabold text-white bg-indigo-950 hover:bg-indigo-900 border border-indigo-900 rounded-full transition-colors cursor-pointer"
+              title="My Dashboard"
             >
-              <Clock className="w-3.5 h-3.5 text-[#708238]" />
-              <span>My Requests</span>
-              <span className="ml-1 bg-[#708238] text-white text-[10px] w-4 h-4 rounded-full flex items-center justify-center font-extrabold">
-                {myRequestsCount}
-              </span>
+              <User className="w-3.5 h-3.5" />
+              <span>Dashboard</span>
+            </button>
+          ) : (
+            <button
+              onClick={onOpenAuth}
+              className="flex items-center gap-1.5 px-3.5 py-2 text-xs font-bold text-[#2C3317] bg-white hover:bg-slate-50 border border-slate-300 rounded-full transition-colors cursor-pointer"
+            >
+              <LogIn className="w-3.5 h-3.5 text-slate-600" />
+              <span>Login</span>
             </button>
           )}
 
@@ -223,6 +201,24 @@ export const Header: React.FC<HeaderProps> = ({
               <UserPlus className="w-3.5 h-3.5 text-[#708238]" />
               <span>Join as Tutor</span>
             </button>
+            
+            {user ? (
+              <button
+                onClick={() => { setMobileMenuOpen(false); navigate('/dashboard'); }}
+                className="w-full py-2 px-3 text-xs font-bold text-white bg-indigo-950 hover:bg-indigo-900 border border-indigo-900 rounded-full flex items-center justify-center gap-1 col-span-2"
+              >
+                <User className="w-3.5 h-3.5" />
+                <span>My Dashboard</span>
+              </button>
+            ) : (
+              <button
+                onClick={() => { setMobileMenuOpen(false); onOpenAuth(); }}
+                className="w-full py-2 px-3 text-xs font-bold text-slate-700 bg-white border border-slate-300 rounded-full flex items-center justify-center gap-1 col-span-2"
+              >
+                <LogIn className="w-3.5 h-3.5 text-slate-600" />
+                <span>Login</span>
+              </button>
+            )}
           </div>
 
           <div className="flex flex-col space-y-2 text-sm font-medium text-[#3D441E] pt-1">
@@ -268,27 +264,6 @@ export const Header: React.FC<HeaderProps> = ({
             >
               Frequently Asked Questions
             </button>
-            <button 
-              onClick={() => { setMobileMenuOpen(false); onOpenAIAdvisor(); }} 
-              className="text-left py-2 px-3 bg-[#E9EDDE] text-[#2C3317] rounded-full font-bold flex items-center gap-2"
-            >
-              <Sparkles className="w-4 h-4 text-[#708238]" />
-              <span>Ask AI Tuition Advisor</span>
-            </button>
-            {myRequestsCount > 0 && (
-              <button 
-                onClick={() => { setMobileMenuOpen(false); onOpenMyRequests(); }} 
-                className="text-left py-2 px-3 bg-[#F2F4EF] text-[#2C3317] rounded-full font-bold flex items-center justify-between"
-              >
-                <span className="flex items-center gap-2">
-                  <Clock className="w-4 h-4 text-[#708238]" />
-                  <span>My Demo Requests</span>
-                </span>
-                <span className="bg-[#708238] text-white text-xs px-2 py-0.5 rounded-full">
-                  {myRequestsCount}
-                </span>
-              </button>
-            )}
           </div>
         </div>
       )}

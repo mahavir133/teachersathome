@@ -368,6 +368,45 @@
       "demoClassAvailable": true
     }
   ],
-  "parentRequests": [],
-  "tutorApplications": []
+  "parentRequests": [
+    {
+      "parentName": "Mahavir Tirkey",
+      "studentName": "Mahavir Tirkey's Child",
+      "phone": "9765579760",
+      "studentClass": "Class 6-8 (Middle)",
+      "board": "ICSE/ISC",
+      "subjects": [
+        "Mathematics",
+        "Science",
+        "Physics",
+        "Chemistry"
+      ],
+      "city": "Ranchi",
+      "locality": "Parvati Angan",
+      "preferredGender": "Female Tutor",
+      "mode": "Home Tuition",
+      "notes": "",
+      "id": "REQ-430439",
+      "createdAt": "2026-09-01T20:06:14.844Z"
+    }
+  ],
+  "tutorApplications": [
+    {
+      "fullName": "John Doe",
+      "phone": "123",
+      "email": "j@d.com",
+      "qualification": "B",
+      "experienceYears": 1,
+      "subjects": [
+        "M"
+      ],
+      "cities": [
+        "R"
+      ],
+      "preferredMode": "O",
+      "bio": "B",
+      "id": "TUTOR-861467",
+      "createdAt": "2026-09-01T20:10:08.819Z"
+    }
+  ]
 }

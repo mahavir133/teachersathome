@@ -4,10 +4,9 @@ import { GraduationCap, Phone, MessageSquare, Mail, MapPin, Heart } from 'lucide
 interface FooterProps {
   onRequestTutor: () => void;
   onBecomeTutor: () => void;
-  onOpenAIAdvisor: () => void;
 }
 
-export const Footer: React.FC<FooterProps> = ({ onRequestTutor, onBecomeTutor, onOpenAIAdvisor }) => {
+export const Footer: React.FC<FooterProps> = ({ onRequestTutor, onBecomeTutor }) => {
   return (
     <footer className="bg-slate-950 text-slate-400 text-xs border-t border-slate-900">
       
@@ -17,12 +16,7 @@ export const Footer: React.FC<FooterProps> = ({ onRequestTutor, onBecomeTutor, o
           {/* Col 1: Brand */}
           <div className="lg:col-span-2 space-y-4">
             <div className="flex items-center gap-2.5">
-              <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-indigo-600 to-blue-600 flex items-center justify-center text-white font-bold shadow-md">
-                <GraduationCap className="w-5 h-5" />
-              </div>
-              <span className="text-xl font-extrabold text-white tracking-tight">
-                Teachers<span className="text-indigo-500">AtHome</span>
-              </span>
+              <img src="/logo.png" alt="Teachers At Home Logo" className="h-12 w-auto object-contain bg-white rounded-xl px-2 py-1 shadow-md" />
             </div>
 
             <p className="text-slate-400 leading-relaxed max-w-sm">
@@ -56,7 +50,6 @@ export const Footer: React.FC<FooterProps> = ({ onRequestTutor, onBecomeTutor, o
             <ul className="space-y-2">
               <li><button onClick={onRequestTutor} className="hover:text-white transition-colors">Request a Home Tutor</button></li>
               <li><button onClick={onBecomeTutor} className="hover:text-white transition-colors">Join as Home Tutor</button></li>
-              <li><button onClick={onOpenAIAdvisor} className="hover:text-amber-400 transition-colors flex items-center gap-1"><span className="text-amber-400">✨</span> AI Tuition Advisor</button></li>
               <li><a href="#fee-calculator" className="hover:text-white transition-colors">Monthly Fee Calculator</a></li>
               <li><a href="#tutors" className="hover:text-white transition-colors">Verified Tutors Directory</a></li>
               <li><a href="#how-it-works" className="hover:text-white transition-colors">How It Works</a></li>

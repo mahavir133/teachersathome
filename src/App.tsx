@@ -13,13 +13,14 @@ import { ContactSection } from './components/ContactSection';
 import { Footer } from './components/Footer';
 import { RequestTutorModal } from './components/RequestTutorModal';
 import { BecomeTutorModal } from './components/BecomeTutorModal';
-import { AITutorAdvisor } from './components/AITutorAdvisor';
-import { UserRequestsDrawer } from './components/UserRequestsDrawer';
 import { AdminConsoleDrawer } from './components/AdminConsoleDrawer';
 import { Tutor, ParentRequest, BoardType } from './types';
 import { Sparkles, X } from 'lucide-react';
+import { Routes, Route } from 'react-router-dom';
+import { AuthModal } from './components/AuthModal';
+import { Dashboard } from './pages/Dashboard';
 
-export default function App() {
+function LandingPage() {
   const [tutors, setTutors] = useState<Tutor[]>([]);
   const [adminConsoleOpen, setAdminConsoleOpen] = useState(false);
 
@@ -36,29 +37,13 @@ export default function App() {
   useEffect(() => {
     fetchTutors();
   }, []);
-  const [myRequests, setMyRequests] = useState<ParentRequest[]>(() => {
-    try {
-      const saved = localStorage.getItem('teachers_at_home_requests');
-      return saved ? JSON.parse(saved) : [];
-    } catch {
-      return [];
-    }
-  });
+
 
   const [activeSection, setActiveSection] = useState('hero');
   const [requestModalOpen, setRequestModalOpen] = useState(false);
   const [selectedTutorForDemo, setSelectedTutorForDemo] = useState<Tutor | null>(null);
   const [becomeTutorModalOpen, setBecomeTutorModalOpen] = useState(false);
-  const [aiAdvisorModalOpen, setAiAdvisorModalOpen] = useState(false);
-  const [myRequestsDrawerOpen, setMyRequestsDrawerOpen] = useState(false);
-
-  useEffect(() => {
-    try {
-      localStorage.setItem('teachers_at_home_requests', JSON.stringify(myRequests));
-    } catch (e) {
-      console.error(e);
-    }
-  }, [myRequests]);
+  const [authModalOpen, setAuthModalOpen] = useState(false);
 
   const handleOpenRequestModal = (tutor?: Tutor | null) => {
     setSelectedTutorForDemo(tutor || null);
@@ -66,7 +51,7 @@ export default function App() {
   };
 
   const handleSuccessParentRequest = (confirmedData: ParentRequest) => {
-    setMyRequests((prev) => [confirmedData, ...prev]);
+    // We rely on the backend now. Optional: Show a toast here.
   };
 
   const handleQuickDemoFromHeroOrCalc = (details: {
@@ -74,11 +59,13 @@ export default function App() {
     board: BoardType;
     city: string;
     phone: string;
+    studentName?: string;
     notes?: string;
   }) => {
     const newReq: ParentRequest = {
       id: 'REQ-' + Math.floor(100000 + Math.random() * 900000),
       parentName: 'Parent (' + details.phone + ')',
+      studentName: details.studentName || 'Parent (' + details.phone + ')\'s Child',
       phone: details.phone,
       studentClass: details.studentClass,
       board: details.board,
@@ -111,11 +98,12 @@ export default function App() {
         onRequestTutor={() => handleOpenRequestModal()}
         onBecomeTutor={() => setBecomeTutorModalOpen(true)}
         onOpenAIAdvisor={() => setAiAdvisorModalOpen(true)}
-        onOpenMyRequests={() => setMyRequestsDrawerOpen(true)}
+        onOpenMyRequests={() => {}}
         onOpenAdmin={() => setAdminConsoleOpen(true)}
+        onOpenAuth={() => setAuthModalOpen(true)}
         activeSection={activeSection}
         setActiveSection={setActiveSection}
-        myRequestsCount={myRequests.length}
+        myRequestsCount={0}
       />
 
       {/* Main Content Sections */}
@@ -157,27 +145,6 @@ export default function App() {
           onRequestTutor={() => handleOpenRequestModal()}
         />
 
-        {/* AI Advisor Embedded Section */}
-        <section id="ai-advisor" className="py-16 bg-slate-100 border-b border-slate-200">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="text-center max-w-2xl mx-auto mb-8">
-              <span className="text-xs font-black text-indigo-700 bg-indigo-50 border border-indigo-200 px-3 py-1 rounded-full uppercase tracking-wider inline-flex items-center gap-1">
-                <Sparkles className="w-3.5 h-3.5" />
-                AI-Powered Guidance
-              </span>
-              <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight mt-3">
-                Ask Our AI Home Tuition & Study Advisor
-              </h2>
-              <p className="text-sm text-slate-600 mt-2">
-                Get instant answers regarding board exam preparation, study timetables, recommended tuition hours, and subject strategies.
-              </p>
-            </div>
-
-            <AITutorAdvisor
-              onRequestTutor={() => handleOpenRequestModal()}
-            />
-          </div>
-        </section>
 
         {/* Testimonials */}
         <Testimonials />
@@ -193,7 +160,6 @@ export default function App() {
       <Footer
         onRequestTutor={() => handleOpenRequestModal()}
         onBecomeTutor={() => setBecomeTutorModalOpen(true)}
-        onOpenAIAdvisor={() => setAiAdvisorModalOpen(true)}
       />
 
       {/* Modals & Drawers */}
@@ -210,25 +176,14 @@ export default function App() {
         onSuccessSubmit={() => {}}
       />
 
-      {aiAdvisorModalOpen && (
-        <div className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4">
-          <div className="w-full max-w-2xl">
-            <AITutorAdvisor
-              onClose={() => setAiAdvisorModalOpen(false)}
-              onRequestTutor={() => {
-                setAiAdvisorModalOpen(false);
-                handleOpenRequestModal();
-              }}
-            />
-          </div>
-        </div>
-      )}
-
-      <UserRequestsDrawer
-        isOpen={myRequestsDrawerOpen}
-        onClose={() => setMyRequestsDrawerOpen(false)}
-        requests={myRequests}
+      <AuthModal 
+        isOpen={authModalOpen}
+        onClose={() => setAuthModalOpen(false)}
       />
+
+
+
+
 
       <AdminConsoleDrawer
         isOpen={adminConsoleOpen}
@@ -259,5 +214,14 @@ export default function App() {
       </div>
 
     </div>
+  );
+}
+
+export default function App() {
+  return (
+    <Routes>
+      <Route path="/" element={<LandingPage />} />
+      <Route path="/dashboard" element={<Dashboard />} />
+    </Routes>
   );
 }

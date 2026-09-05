@@ -8,6 +8,7 @@ interface HeroProps {
     board: BoardType;
     city: string;
     phone: string;
+    studentName?: string;
   }) => void;
   onExploreTutors: () => void;
 }
@@ -17,6 +18,7 @@ export const Hero: React.FC<HeroProps> = ({ onRequestDemoWithDetails, onExploreT
   const [selectedBoard, setSelectedBoard] = useState<BoardType>('CBSE');
   const [selectedCity, setSelectedCity] = useState('Ranchi');
   const [phone, setPhone] = useState('');
+  const [studentName, setStudentName] = useState('');
   const [errorMsg, setErrorMsg] = useState('');
 
   const handleSubmitQuickDemo = (e: React.FormEvent) => {
@@ -30,7 +32,8 @@ export const Hero: React.FC<HeroProps> = ({ onRequestDemoWithDetails, onExploreT
       studentClass: selectedClass,
       board: selectedBoard,
       city: selectedCity,
-      phone
+      phone,
+      studentName
     });
   };
 
@@ -192,6 +195,20 @@ export const Hero: React.FC<HeroProps> = ({ onRequestDemoWithDetails, onExploreT
                     <option value="Delhi NCR">Delhi NCR / Gurgaon / Noida</option>
                     <option value="Other City">Other City in India</option>
                   </select>
+                </div>
+
+                {/* Student Name */}
+                <div>
+                  <label className="block text-xs font-bold text-[#3D441E] uppercase tracking-wide mb-1">
+                    Student's Name
+                  </label>
+                  <input
+                    type="text"
+                    value={studentName}
+                    onChange={(e) => setStudentName(e.target.value)}
+                    placeholder="Enter Student's Name"
+                    className="w-full bg-[#FAF9F6] border border-[#D1D5CB] rounded-lg px-3.5 py-2.5 text-sm font-bold text-[#2C3317] focus:ring-2 focus:ring-[#708238] focus:outline-none"
+                  />
                 </div>
 
                 {/* Phone Number */}

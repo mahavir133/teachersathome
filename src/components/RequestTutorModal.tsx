@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { X, CheckCircle2, Sparkles, MessageSquare, Phone, ShieldCheck } from 'lucide-react';
 import { BoardType, GenderPreference, TeachingModeType, Tutor } from '../types';
+import { useAuth } from '../AuthContext';
 
 interface RequestTutorModalProps {
   isOpen: boolean;
@@ -46,6 +47,8 @@ export const RequestTutorModal: React.FC<RequestTutorModalProps> = ({
     }
   };
 
+  const { token } = useAuth();
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!parentName.trim() || !phone.trim() || phone.length < 10) {
@@ -71,9 +74,13 @@ export const RequestTutorModal: React.FC<RequestTutorModalProps> = ({
     };
 
     try {
+      const headers: any = { 'Content-Type': 'application/json' };
+      if (token) {
+        headers['Authorization'] = `Bearer ${token}`;
+      }
       const res = await fetch('/api/parent-request', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers,
         body: JSON.stringify(payload)
       });
       const data = await res.json();
@@ -182,6 +189,20 @@ export const RequestTutorModal: React.FC<RequestTutorModalProps> = ({
                     placeholder="e.g. Rajesh Kumar"
                     value={parentName}
                     onChange={(e) => setParentName(e.target.value)}
+                    className="w-full bg-[#FAF9F6] border border-[#D1D5CB] rounded-xl px-3 py-2 font-semibold text-[#2C3317] focus:ring-2 focus:ring-[#708238] focus:outline-none"
+                  />
+                </div>
+
+                {/* Student Name */}
+                <div>
+                  <label className="block font-bold text-[#3D441E] mb-1">
+                    Student's Name
+                  </label>
+                  <input
+                    type="text"
+                    placeholder="e.g. Aarav Kumar"
+                    value={studentName}
+                    onChange={(e) => setStudentName(e.target.value)}
                     className="w-full bg-[#FAF9F6] border border-[#D1D5CB] rounded-xl px-3 py-2 font-semibold text-[#2C3317] focus:ring-2 focus:ring-[#708238] focus:outline-none"
                   />
                 </div>
