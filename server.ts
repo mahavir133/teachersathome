@@ -558,6 +558,7 @@ app.get("/api/tutor/fees", authenticateToken, async (req, res) => {
 const distPath = path.join(process.cwd(), "dist");
 
 // Serve static files from dist directory
+app.use(express.static('dist'));
 app.use(express.static(distPath));
 
 if (process.env.NODE_ENV !== "production" && !fs.existsSync(path.join(distPath, "index.html"))) {
