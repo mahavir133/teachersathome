@@ -598,9 +598,9 @@ if (process.env.NODE_ENV !== "production" && !fs.existsSync(path.join(distPath, 
   app.use(vite.middlewares);
 } else {
   console.log(`Serving static production build from ${distPath}`);
-  // SPA fallback for client-side routing
-  app.get("*", (req, res, next) => {
-    if (req.path.startsWith("/api")) {
+  // SPA fallback middleware for Express 5
+  app.use((req, res, next) => {
+    if (req.method !== 'GET' || req.path.startsWith("/api")) {
       return next();
     }
     res.sendFile(path.join(distPath, "index.html"));
