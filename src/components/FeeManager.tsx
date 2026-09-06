@@ -135,13 +135,34 @@ export function FeeManager() {
       if (response.ok) {
         const blob = await response.blob();
         const reader = new FileReader();
-        const base64data = await new Promise<string>((resolve) => {
+        const rawBase64 = await new Promise<string>((resolve) => {
           reader.onloadend = () => resolve(reader.result as string);
           reader.readAsDataURL(blob);
         });
 
+        // Convert image via HTML5 Canvas to eliminate jsPDF PNG color corruption artifacts
+        const cleanImageDataUrl = await new Promise<string>((resolve) => {
+          const img = new Image();
+          img.onload = () => {
+            const canvas = document.createElement('canvas');
+            canvas.width = img.naturalWidth || 1024;
+            canvas.height = img.naturalHeight || 682;
+            const ctx = canvas.getContext('2d');
+            if (ctx) {
+              ctx.fillStyle = '#FFFFFF';
+              ctx.fillRect(0, 0, canvas.width, canvas.height);
+              ctx.drawImage(img, 0, 0);
+              resolve(canvas.toDataURL('image/jpeg', 0.95));
+            } else {
+              resolve(rawBase64);
+            }
+          };
+          img.onerror = () => resolve(rawBase64);
+          img.src = rawBase64;
+        });
+
         const img = new Image();
-        img.src = base64data;
+        img.src = cleanImageDataUrl;
         await new Promise((resolve) => {
           img.onload = resolve;
           img.onerror = resolve;
@@ -153,10 +174,9 @@ export function FeeManager() {
 
         const targetHeight = 24;
         const targetWidth = targetHeight * ratio;
-        const yPos = 12;
+        const yPos = 10;
 
-        const format = base64data.includes('data:image/jpeg') || base64data.includes('data:image/jpg') ? 'JPEG' : 'PNG';
-        doc.addImage(base64data, format, 15, yPos, targetWidth, targetHeight);
+        doc.addImage(cleanImageDataUrl, 'JPEG', 15, yPos, targetWidth, targetHeight);
       }
     } catch (err) {
       console.warn("Could not load logo", err);
