@@ -27,7 +27,7 @@ const ai = new GoogleGenAI({
   }
 });
 
-import { getTutors, getParentRequests, getTutorApplications, addParentRequest, addTutorApplication, approveTutorApplication, rejectTutorApplication, updateParentRequestStatus, getUserByEmail, createUser, getParentRequestsByUserId, getTutorApplicationByUserId, getTutorByUserId, linkParentRequests, linkTutorApplications, addLegacyTutor, getAssignments, createAssignment, getFeeCollections, addFeeCollection, getMonthlyFeeStats, updateAssignment, deleteAssignment, updateFeeCollection, deleteFeeCollection, getParentAssignmentsByUserId, getTutorAssignmentsByUserId, getParentFeeCollectionsByUserId, getTutorFeeCollectionsByUserId } from "./db.js";
+import { pool, getTutors, getParentRequests, getTutorApplications, addParentRequest, addTutorApplication, approveTutorApplication, rejectTutorApplication, updateParentRequestStatus, getUserByEmail, createUser, getParentRequestsByUserId, getTutorApplicationByUserId, getTutorByUserId, linkParentRequests, linkTutorApplications, addLegacyTutor, getAssignments, createAssignment, getFeeCollections, addFeeCollection, getMonthlyFeeStats, updateAssignment, deleteAssignment, updateFeeCollection, deleteFeeCollection, getParentAssignmentsByUserId, getTutorAssignmentsByUserId, getParentFeeCollectionsByUserId, getTutorFeeCollectionsByUserId } from "./db.js";
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 
@@ -111,6 +111,34 @@ app.post("/api/auth/login", async (req, res) => {
 
 app.get("/api/health", (_req, res) => {
   res.json({ status: "ok", appName: "Teachers At Home" });
+});
+
+app.get("/api/db-check", async (_req, res) => {
+  try {
+    const [rows] = await pool.query("SELECT 1 + 1 AS result");
+    const [tables] = await pool.query("SHOW TABLES");
+    res.json({
+      success: true,
+      message: "Database connection successful!",
+      host: process.env.DB_HOST || 'localhost',
+      user: process.env.DB_USER || 'u488257575_root',
+      database: process.env.DB_NAME || 'u488257575_teachersathome',
+      tables: (tables as any[]).map(t => Object.values(t)[0])
+    });
+  } catch (error: any) {
+    console.error("Database Check Failed:", error);
+    res.status(500).json({
+      success: false,
+      error: "Database connection failed",
+      details: error.message,
+      code: error.code,
+      errno: error.errno,
+      sqlState: error.sqlState,
+      host: process.env.DB_HOST || 'localhost',
+      user: process.env.DB_USER || 'u488257575_root',
+      database: process.env.DB_NAME || 'u488257575_teachersathome'
+    });
+  }
 });
 
 app.get("/api/user/data", authenticateToken, async (req: any, res: any) => {
@@ -204,9 +232,9 @@ app.post("/api/parent-request", async (req, res) => {
     const reqData = { ...req.body, id: "REQ-" + Math.floor(100000 + Math.random() * 900000), createdAt: new Date().toISOString(), status: 'Pending', user_id: userId };
     await addParentRequest(reqData);
     res.json({ success: true, message: "Free demo request submitted successfully! Our Academic Counselor will contact you within 2 hours.", data: reqData });
-  } catch (error) {
+  } catch (error: any) {
     console.error(error);
-    res.status(500).json({ error: "Failed to submit demo request" });
+    res.status(500).json({ error: error.message || "Failed to submit demo request", code: error.code });
   }
 });
 
@@ -224,9 +252,9 @@ app.post("/api/tutor-apply", async (req, res) => {
     const appData = { ...req.body, id: "TUTOR-" + Math.floor(100000 + Math.random() * 900000), createdAt: new Date().toISOString(), status: 'Received', user_id: userId };
     await addTutorApplication(appData);
     res.json({ success: true, message: "Tutor application submitted! Our team will review your qualifications and contact you for verification.", data: appData });
-  } catch (error) {
+  } catch (error: any) {
     console.error(error);
-    res.status(500).json({ error: "Failed to submit tutor application" });
+    res.status(500).json({ error: error.message || "Failed to submit tutor application", code: error.code });
   }
 });
 
