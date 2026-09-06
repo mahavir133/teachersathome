@@ -607,7 +607,23 @@ if (process.env.NODE_ENV !== "production" && !fs.existsSync(path.join(distPath, 
   });
 }
 
-const PORT = process.env.PORT ? parseInt(process.env.PORT, 10) : 3000;
-app.listen(PORT, "0.0.0.0", () => {
-  console.log(`Teachers At Home Server running on http://0.0.0.0:${PORT}`);
+process.on('unhandledRejection', (reason, promise) => {
+  console.error('Unhandled Rejection at:', promise, 'reason:', reason);
 });
+
+process.on('uncaughtException', (err) => {
+  console.error('Uncaught Exception thrown:', err);
+});
+
+const PORT = process.env.PORT || 3000;
+
+if (typeof PORT === "string" && isNaN(Number(PORT))) {
+  app.listen(PORT, () => {
+    console.log(`Teachers At Home Server listening on socket ${PORT}`);
+  });
+} else {
+  const numericPort = Number(PORT);
+  app.listen(numericPort, "0.0.0.0", () => {
+    console.log(`Teachers At Home Server running on http://0.0.0.0:${numericPort}`);
+  });
+}
