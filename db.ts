@@ -3,7 +3,7 @@ import { Tutor, ParentRequest, TutorApplication, User } from './src/types.js';
 
 export const pool = mysql.createPool({
   host: process.env.DB_HOST || 'localhost',
-  user: process.env.DB_USER || 'root',
+  user: process.env.DB_USER || 'u488257575_root',
   password: process.env.DB_PASSWORD || 'Teachers@2026',
   database: process.env.DB_NAME || 'u488257575_teachersathome',
   waitForConnections: true,
