@@ -139,7 +139,29 @@ export function FeeManager() {
           reader.onloadend = () => resolve(reader.result as string);
           reader.readAsDataURL(blob);
         });
-        doc.addImage(base64data, 'PNG', 15, 10, 50, 30);
+
+        const img = new Image();
+        img.src = base64data;
+        await new Promise((resolve) => {
+          img.onload = resolve;
+          img.onerror = resolve;
+        });
+
+        const maxWidth = 55;
+        const maxHeight = 28;
+        let imgWidth = maxWidth;
+        let imgHeight = (img.naturalWidth && img.naturalHeight)
+          ? (img.naturalHeight / img.naturalWidth) * imgWidth
+          : 25;
+
+        if (imgHeight > maxHeight) {
+          imgHeight = maxHeight;
+          imgWidth = img.naturalHeight ? (img.naturalWidth / img.naturalHeight) * imgHeight : maxWidth;
+        }
+
+        const yPos = 10 + (maxHeight - imgHeight) / 2;
+        const format = base64data.includes('data:image/jpeg') || base64data.includes('data:image/jpg') ? 'JPEG' : 'PNG';
+        doc.addImage(base64data, format, 15, yPos, imgWidth, imgHeight);
       }
     } catch (err) {
       console.warn("Could not load logo", err);
