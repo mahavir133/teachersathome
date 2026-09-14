@@ -199,6 +199,7 @@ export async function getAssignments(): Promise<any[]> {
     SELECT a.*, 
            t.name as tutorName, 
            pr.parentName as parentName, 
+           pr.studentName as studentName,
            pr.phone as parentPhone, 
            pr.subjects as subjects, 
            pr.city as city

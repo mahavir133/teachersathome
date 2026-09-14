@@ -337,15 +337,16 @@ export function AdminDashboard() {
                 <option value="">-- Select an Assignment --</option>
                 {Object.entries(
                   allAssignments.reduce((acc: any, asg: any) => {
-                    if (!acc[asg.tutor_name]) acc[asg.tutor_name] = [];
-                    acc[asg.tutor_name].push(asg);
+                    const tName = asg.tutorName || 'Unknown Tutor';
+                    if (!acc[tName]) acc[tName] = [];
+                    acc[tName].push(asg);
                     return acc;
                   }, {})
                 ).map(([tutorName, asgs]: [string, any]) => (
                   <optgroup key={tutorName} label={`Tutor: ${tutorName}`}>
                     {asgs.map((asg: any) => (
                       <option key={asg.id} value={asg.id}>
-                        Student: {asg.student_name || 'N/A'}
+                        Student: {asg.studentName || asg.parentName || 'Unknown'}
                       </option>
                     ))}
                   </optgroup>
