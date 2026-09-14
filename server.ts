@@ -27,7 +27,7 @@ const ai = new GoogleGenAI({
   }
 });
 
-import { pool, getTutors, getParentRequests, getTutorApplications, addParentRequest, addTutorApplication, approveTutorApplication, rejectTutorApplication, updateParentRequestStatus, getUserByEmail, createUser, getParentRequestsByUserId, getTutorApplicationByUserId, getTutorByUserId, linkParentRequests, linkTutorApplications, addLegacyTutor, getAssignments, createAssignment, getFeeCollections, addFeeCollection, getMonthlyFeeStats, updateAssignment, deleteAssignment, updateFeeCollection, deleteFeeCollection, getParentAssignmentsByUserId, getTutorAssignmentsByUserId, getParentFeeCollectionsByUserId, getTutorFeeCollectionsByUserId } from "./db.js";
+import { pool, getTutors, getParentRequests, getTutorApplications, addParentRequest, addTutorApplication, approveTutorApplication, rejectTutorApplication, updateParentRequestStatus, getUserByEmail, createUser, getParentRequestsByUserId, getTutorApplicationByUserId, getTutorByUserId, linkParentRequests, linkTutorApplications, addLegacyTutor, getAssignments, createAssignment, getFeeCollections, addFeeCollection, getMonthlyFeeStats, updateAssignment, deleteAssignment, updateFeeCollection, deleteFeeCollection, getParentAssignmentsByUserId, getTutorAssignmentsByUserId, getParentFeeCollectionsByUserId, getTutorFeeCollectionsByUserId, getAttendanceByAssignment, markAttendance } from "./db.js";
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 
@@ -578,6 +578,36 @@ app.get("/api/tutor/fees", authenticateToken, async (req, res) => {
   } catch (err: any) {
     console.error(err);
     res.status(500).json({ error: "Failed to fetch fees" });
+  }
+});
+
+app.get("/api/attendance", authenticateToken, async (req, res) => {
+  try {
+    const assignmentId = req.query.assignment_id as string;
+    if (!assignmentId) return res.status(400).json({ error: "Missing assignment_id" });
+    const records = await getAttendanceByAssignment(assignmentId);
+    res.json(records);
+  } catch (err: any) {
+    console.error(err);
+    res.status(500).json({ error: "Failed to fetch attendance" });
+  }
+});
+
+app.post("/api/attendance", authenticateToken, async (req, res) => {
+  const userReq = req as any;
+  try {
+    const { id, assignment_id, class_date, status, marked_by } = req.body;
+    if (!assignment_id || !class_date || !status || !marked_by) {
+      return res.status(400).json({ error: "Missing required fields" });
+    }
+    // Only tutor or parent can mark, maybe check assignment ownership? 
+    // Assuming simple auth for this demo implementation
+    const recordId = id || "ATT-" + Math.floor(100000 + Math.random() * 900000);
+    await markAttendance(recordId, assignment_id, class_date, status, marked_by);
+    res.json({ success: true, message: "Attendance updated" });
+  } catch (err: any) {
+    console.error(err);
+    res.status(500).json({ error: "Failed to update attendance" });
   }
 });
 

@@ -36,6 +36,20 @@ export async function getTutorApplications(): Promise<TutorApplication[]> {
   return rows as TutorApplication[];
 }
 
+export async function getAttendanceByAssignment(assignmentId: string): Promise<any[]> {
+  const [rows] = await pool.query('SELECT * FROM attendance WHERE assignment_id = ? ORDER BY class_date DESC', [assignmentId]);
+  return rows as any[];
+}
+
+export async function markAttendance(id: string, assignmentId: string, date: string, status: string, markedBy: string): Promise<void> {
+  const query = `
+    INSERT INTO attendance (id, assignment_id, class_date, status, marked_by)
+    VALUES (?, ?, ?, ?, ?)
+    ON DUPLICATE KEY UPDATE status = VALUES(status), marked_by = VALUES(marked_by)
+  `;
+  await pool.execute(query, [id, assignmentId, date, status, markedBy]);
+}
+
 export async function getParentRequestsByUserId(userId: string): Promise<ParentRequest[]> {
   const [rows] = await pool.query('SELECT * FROM parent_requests WHERE user_id = ? ORDER BY createdAt DESC', [userId]);
   return rows as ParentRequest[];

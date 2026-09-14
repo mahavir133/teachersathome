@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { Clock, MapPin, Sparkles, Receipt, UserPlus, IndianRupee } from 'lucide-react';
+import { Clock, MapPin, Sparkles, Receipt, UserPlus, IndianRupee, Calendar } from 'lucide-react';
 import { ParentRequest } from '../types';
 import { useAuth } from '../AuthContext';
+import { AttendanceCalendar } from './AttendanceCalendar';
 
 export function ParentDashboard() {
   const { token } = useAuth();
@@ -9,7 +10,8 @@ export function ParentDashboard() {
   const [assignments, setAssignments] = useState<any[]>([]);
   const [fees, setFees] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
-  const [activeTab, setActiveTab] = useState<'requests' | 'assignments' | 'fees'>('requests');
+  const [activeTab, setActiveTab] = useState<'requests' | 'assignments' | 'fees' | 'attendance'>('requests');
+  const [selectedAssignmentId, setSelectedAssignmentId] = useState<string>('');
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -26,6 +28,9 @@ export function ParentDashboard() {
         if (resAsg.ok) {
           const asgData = await resAsg.json();
           setAssignments(asgData || []);
+          if (asgData && asgData.length > 0) {
+            setSelectedAssignmentId(asgData[0].id);
+          }
         }
 
         const resFees = await fetch('/api/parent/fees', {
@@ -75,6 +80,14 @@ export function ParentDashboard() {
           }`}
         >
           <Receipt className="w-4 h-4" /> Payment History
+        </button>
+        <button
+          onClick={() => setActiveTab('attendance')}
+          className={`flex items-center gap-2 px-6 py-3 font-bold text-sm transition-colors border-b-2 ${
+            activeTab === 'attendance' ? 'border-indigo-600 text-indigo-600' : 'border-transparent text-slate-500 hover:text-slate-800'
+          }`}
+        >
+          <Calendar className="w-4 h-4" /> Attendance
         </button>
       </div>
 
@@ -210,6 +223,41 @@ export function ParentDashboard() {
                     ))}
                   </tbody>
                 </table>
+              </div>
+            )}
+          </div>
+        )}
+
+        {activeTab === 'attendance' && (
+          <div>
+            <h3 className="text-lg font-bold text-slate-800 mb-4 border-b border-slate-100 pb-2">Class Attendance</h3>
+            
+            {loading ? (
+              <div className="py-8 text-center text-slate-500">Loading assignments...</div>
+            ) : assignments.length === 0 ? (
+              <div className="py-12 text-center text-slate-500">
+                <p className="font-bold">No active tutors to view attendance.</p>
+              </div>
+            ) : (
+              <div className="space-y-4">
+                <div>
+                  <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-1">Select Tutor</label>
+                  <select 
+                    value={selectedAssignmentId} 
+                    onChange={(e) => setSelectedAssignmentId(e.target.value)}
+                    className="w-full max-w-md bg-slate-50 border border-slate-200 rounded-lg px-3 py-2 font-bold text-slate-700"
+                  >
+                    {assignments.map(asg => (
+                      <option key={asg.id} value={asg.id}>
+                        {asg.tutorName} for {asg.studentName || 'Student'}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+                
+                {selectedAssignmentId && (
+                  <AttendanceCalendar assignmentId={selectedAssignmentId} token={token || ''} role="PARENT" />
+                )}
               </div>
             )}
           </div>

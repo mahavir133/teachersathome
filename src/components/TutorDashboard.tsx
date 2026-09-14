@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { ShieldCheck, BookOpen, MapPin, GraduationCap, Receipt, Users, UserCircle } from 'lucide-react';
+import { ShieldCheck, BookOpen, MapPin, GraduationCap, Receipt, Users, UserCircle, Calendar } from 'lucide-react';
 import { TutorApplication, Tutor } from '../types';
 import { useAuth } from '../AuthContext';
+import { AttendanceCalendar } from './AttendanceCalendar';
 
 export function TutorDashboard() {
   const { user, token } = useAuth();
@@ -10,7 +11,8 @@ export function TutorDashboard() {
   const [assignments, setAssignments] = useState<any[]>([]);
   const [fees, setFees] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
-  const [activeTab, setActiveTab] = useState<'profile' | 'students' | 'fees'>('profile');
+  const [activeTab, setActiveTab] = useState<'profile' | 'students' | 'fees' | 'attendance'>('profile');
+  const [selectedAssignmentId, setSelectedAssignmentId] = useState<string>('');
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -29,6 +31,9 @@ export function TutorDashboard() {
           if (resAsg.ok) {
             const asgData = await resAsg.json();
             setAssignments(asgData || []);
+            if (asgData && asgData.length > 0) {
+              setSelectedAssignmentId(asgData[0].id);
+            }
           }
 
           const resFees = await fetch('/api/tutor/fees', {
@@ -79,6 +84,14 @@ export function TutorDashboard() {
           }`}
         >
           <Receipt className="w-4 h-4" /> Payments Received
+        </button>
+        <button
+          onClick={() => setActiveTab('attendance')}
+          className={`flex items-center gap-2 px-6 py-3 font-bold text-sm transition-colors border-b-2 ${
+            activeTab === 'attendance' ? 'border-[#708238] text-[#708238]' : 'border-transparent text-slate-500 hover:text-slate-800'
+          }`}
+        >
+          <Calendar className="w-4 h-4" /> Attendance
         </button>
       </div>
 
@@ -226,6 +239,41 @@ export function TutorDashboard() {
                     ))}
                   </tbody>
                 </table>
+              </div>
+            )}
+          </div>
+        )}
+
+        {activeTab === 'attendance' && (
+          <div>
+            <h3 className="text-lg font-bold text-slate-800 mb-4 border-b border-slate-100 pb-2">Student Attendance</h3>
+            
+            {loading ? (
+              <div className="py-8 text-center text-slate-500">Loading assignments...</div>
+            ) : assignments.length === 0 ? (
+              <div className="py-12 text-center text-slate-500">
+                <p className="font-bold">No active students to mark attendance.</p>
+              </div>
+            ) : (
+              <div className="space-y-4">
+                <div>
+                  <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-1">Select Student</label>
+                  <select 
+                    value={selectedAssignmentId} 
+                    onChange={(e) => setSelectedAssignmentId(e.target.value)}
+                    className="w-full max-w-md bg-slate-50 border border-slate-200 rounded-lg px-3 py-2 font-bold text-slate-700"
+                  >
+                    {assignments.map(asg => (
+                      <option key={asg.id} value={asg.id}>
+                        {asg.studentName || 'Student'} (Parent: {asg.parentName})
+                      </option>
+                    ))}
+                  </select>
+                </div>
+                
+                {selectedAssignmentId && (
+                  <AttendanceCalendar assignmentId={selectedAssignmentId} token={token || ''} role="TUTOR" />
+                )}
               </div>
             )}
           </div>

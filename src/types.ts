@@ -155,3 +155,12 @@ export interface FeeCollection {
   studentName?: string;
   tutorName?: string;
 }
+
+export interface AttendanceRecord {
+  id: string;
+  assignment_id: string;
+  class_date: string;
+  status: 'Present' | 'Absent' | 'Cancelled';
+  marked_by: string;
+  created_at?: string;
+}

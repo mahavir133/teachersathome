@@ -59,3 +59,13 @@ CREATE TABLE IF NOT EXISTS tutor_applications (
     status VARCHAR(50),
     createdAt DATETIME
 );
+
+CREATE TABLE IF NOT EXISTS attendance (
+    id VARCHAR(50) PRIMARY KEY,
+    assignment_id VARCHAR(50) NOT NULL,
+    class_date VARCHAR(20) NOT NULL,
+    status ENUM('Present', 'Absent', 'Cancelled') NOT NULL,
+    marked_by VARCHAR(50) NOT NULL,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    UNIQUE KEY unique_assignment_date (assignment_id, class_date)
+);
