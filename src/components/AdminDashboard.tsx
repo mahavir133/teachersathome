@@ -334,10 +334,21 @@ export function AdminDashboard() {
                 onChange={(e) => setSelectedRectifyAssignment(e.target.value)}
                 className="w-full max-w-xl bg-slate-50 border border-slate-200 rounded-lg px-3 py-2 font-bold text-slate-700"
               >
-                {allAssignments.map((asg: any) => (
-                  <option key={asg.id} value={asg.id}>
-                    {asg.tutor_name} teaching {asg.student_name}
-                  </option>
+                <option value="">-- Select an Assignment --</option>
+                {Object.entries(
+                  allAssignments.reduce((acc: any, asg: any) => {
+                    if (!acc[asg.tutor_name]) acc[asg.tutor_name] = [];
+                    acc[asg.tutor_name].push(asg);
+                    return acc;
+                  }, {})
+                ).map(([tutorName, asgs]: [string, any]) => (
+                  <optgroup key={tutorName} label={`Tutor: ${tutorName}`}>
+                    {asgs.map((asg: any) => (
+                      <option key={asg.id} value={asg.id}>
+                        Student: {asg.student_name || 'N/A'}
+                      </option>
+                    ))}
+                  </optgroup>
                 ))}
               </select>
             </div>
