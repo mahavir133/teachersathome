@@ -164,3 +164,13 @@ export interface AttendanceRecord {
   marked_by: string;
   created_at?: string;
 }
+
+export interface Grievance {
+  id: string;
+  user_id: string;
+  assignment_id?: string;
+  grievance_type: 'Attendance' | 'Tutor Behavior' | 'Payment' | 'Other';
+  description: string;
+  status: 'Open' | 'In Progress' | 'Resolved';
+  created_at?: string;
+}

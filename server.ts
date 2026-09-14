@@ -27,7 +27,7 @@ const ai = new GoogleGenAI({
   }
 });
 
-import { pool, getTutors, getParentRequests, getTutorApplications, addParentRequest, addTutorApplication, approveTutorApplication, rejectTutorApplication, updateParentRequestStatus, getUserByEmail, createUser, getParentRequestsByUserId, getTutorApplicationByUserId, getTutorByUserId, linkParentRequests, linkTutorApplications, addLegacyTutor, getAssignments, createAssignment, getFeeCollections, addFeeCollection, getMonthlyFeeStats, updateAssignment, deleteAssignment, updateFeeCollection, deleteFeeCollection, getParentAssignmentsByUserId, getTutorAssignmentsByUserId, getParentFeeCollectionsByUserId, getTutorFeeCollectionsByUserId, getAttendanceByAssignment, markAttendance } from "./db.js";
+import { pool, getTutors, getParentRequests, getTutorApplications, addParentRequest, addTutorApplication, approveTutorApplication, rejectTutorApplication, updateParentRequestStatus, getUserByEmail, createUser, getParentRequestsByUserId, getTutorApplicationByUserId, getTutorByUserId, linkParentRequests, linkTutorApplications, addLegacyTutor, getAssignments, createAssignment, getFeeCollections, addFeeCollection, getMonthlyFeeStats, updateAssignment, deleteAssignment, updateFeeCollection, deleteFeeCollection, getParentAssignmentsByUserId, getTutorAssignmentsByUserId, getParentFeeCollectionsByUserId, getTutorFeeCollectionsByUserId, getAttendanceByAssignment, markAttendance, addGrievance, getGrievancesByUserId, getAllGrievances, updateGrievanceStatus } from "./db.js";
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 
@@ -608,6 +608,50 @@ app.post("/api/attendance", authenticateToken, async (req, res) => {
   } catch (err: any) {
     console.error(err);
     res.status(500).json({ error: "Failed to update attendance" });
+  }
+});
+
+app.post("/api/grievance", authenticateToken, async (req, res) => {
+  const userReq = req as any;
+  try {
+    const data = req.body;
+    data.id = "GRV-" + Math.floor(100000 + Math.random() * 900000);
+    data.user_id = userReq.user.id;
+    data.status = 'Open';
+    await addGrievance(data);
+    res.json({ success: true, grievance: data });
+  } catch (err: any) {
+    console.error(err);
+    res.status(500).json({ error: "Failed to submit grievance" });
+  }
+});
+
+app.get("/api/grievances", authenticateToken, async (req, res) => {
+  const userReq = req as any;
+  try {
+    if (userReq.user.role === 'ADMIN') {
+      const all = await getAllGrievances();
+      return res.json(all);
+    } else {
+      const userGrievances = await getGrievancesByUserId(userReq.user.id);
+      return res.json(userGrievances);
+    }
+  } catch (err: any) {
+    console.error(err);
+    res.status(500).json({ error: "Failed to fetch grievances" });
+  }
+});
+
+app.put("/api/admin/grievance", authenticateToken, async (req, res) => {
+  const userReq = req as any;
+  if (userReq.user.role !== 'ADMIN') return res.status(403).json({ error: "Unauthorized" });
+  try {
+    const { id, status } = req.body;
+    await updateGrievanceStatus(id, status);
+    res.json({ success: true });
+  } catch (err: any) {
+    console.error(err);
+    res.status(500).json({ error: "Failed to update grievance" });
   }
 });
 

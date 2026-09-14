@@ -12,7 +12,7 @@ interface AttendanceRecord {
 interface AttendanceCalendarProps {
   assignmentId: string;
   token: string;
-  role: 'TUTOR' | 'PARENT';
+  role: 'TUTOR' | 'PARENT' | 'ADMIN';
 }
 
 export const AttendanceCalendar: React.FC<AttendanceCalendarProps> = ({ assignmentId, token, role }) => {
@@ -46,7 +46,7 @@ export const AttendanceCalendar: React.FC<AttendanceCalendarProps> = ({ assignme
   };
 
   const handleMarkAttendance = async (dateStr: string, status: 'Present' | 'Absent' | 'Cancelled') => {
-    if (role !== 'TUTOR') return; // Only tutors mark in this version
+    if (role === 'PARENT') return; // Parents cannot mark attendance
     
     try {
       const existing = records.find(r => r.class_date === dateStr);
@@ -153,7 +153,7 @@ export const AttendanceCalendar: React.FC<AttendanceCalendarProps> = ({ assignme
                         <span className="text-[9px] font-bold mt-0.5 uppercase tracking-wider">{record.status}</span>
                       </div>
                     ) : (
-                      role === 'TUTOR' && (
+                      (role === 'TUTOR' || role === 'ADMIN') && (
                         <div className="flex gap-1 opacity-0 hover:opacity-100 transition-opacity">
                           <button onClick={() => handleMarkAttendance(dateStr, 'Present')} className="p-1 bg-emerald-100 text-emerald-700 rounded hover:bg-emerald-200" title="Present">
                             <Check className="w-3 h-3" />

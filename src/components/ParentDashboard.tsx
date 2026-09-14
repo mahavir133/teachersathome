@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Clock, MapPin, Sparkles, Receipt, UserPlus, IndianRupee, Calendar } from 'lucide-react';
+import { Clock, MapPin, Sparkles, Receipt, UserPlus, IndianRupee, Calendar, AlertTriangle } from 'lucide-react';
 import { ParentRequest } from '../types';
 import { useAuth } from '../AuthContext';
 import { AttendanceCalendar } from './AttendanceCalendar';
@@ -10,8 +10,11 @@ export function ParentDashboard() {
   const [assignments, setAssignments] = useState<any[]>([]);
   const [fees, setFees] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
-  const [activeTab, setActiveTab] = useState<'requests' | 'assignments' | 'fees' | 'attendance'>('requests');
+  const [activeTab, setActiveTab] = useState<'requests' | 'assignments' | 'fees' | 'attendance' | 'grievances'>('requests');
   const [selectedAssignmentId, setSelectedAssignmentId] = useState<string>('');
+  const [grievances, setGrievances] = useState<any[]>([]);
+  const [newGrievance, setNewGrievance] = useState({ type: 'Attendance', description: '', assignmentId: '' });
+  const [submitting, setSubmitting] = useState(false);
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -39,6 +42,14 @@ export function ParentDashboard() {
         if (resFees.ok) {
           const feesData = await resFees.json();
           setFees(feesData || []);
+        }
+
+        const resGrv = await fetch('/api/grievances', {
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+        if (resGrv.ok) {
+          const grvData = await resGrv.json();
+          setGrievances(grvData || []);
         }
       } catch (err) {
         console.error('Failed to load user data', err);
@@ -88,6 +99,14 @@ export function ParentDashboard() {
           }`}
         >
           <Calendar className="w-4 h-4" /> Attendance
+        </button>
+        <button
+          onClick={() => setActiveTab('grievances')}
+          className={`flex items-center gap-2 px-6 py-3 font-bold text-sm transition-colors border-b-2 ${
+            activeTab === 'grievances' ? 'border-indigo-600 text-indigo-600' : 'border-transparent text-slate-500 hover:text-slate-800'
+          }`}
+        >
+          <AlertTriangle className="w-4 h-4" /> Support
         </button>
       </div>
 
@@ -258,6 +277,110 @@ export function ParentDashboard() {
                 {selectedAssignmentId && (
                   <AttendanceCalendar assignmentId={selectedAssignmentId} token={token || ''} role="PARENT" />
                 )}
+              </div>
+            )}
+          </div>
+        )}
+
+        {activeTab === 'grievances' && (
+          <div>
+            <h3 className="text-lg font-bold text-slate-800 mb-4 border-b border-slate-100 pb-2">Support & Grievances</h3>
+            
+            <div className="bg-indigo-50 border border-indigo-100 rounded-xl p-5 mb-8">
+              <h4 className="font-bold text-indigo-900 mb-3">Raise a New Issue</h4>
+              <div className="space-y-4 max-w-2xl">
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-1">Issue Type</label>
+                    <select 
+                      value={newGrievance.type}
+                      onChange={(e) => setNewGrievance({...newGrievance, type: e.target.value})}
+                      className="w-full bg-white border border-slate-200 rounded-lg px-3 py-2 text-sm"
+                    >
+                      <option value="Attendance">Attendance Issue</option>
+                      <option value="Tutor Behavior">Tutor Behavior</option>
+                      <option value="Payment">Payment Issue</option>
+                      <option value="Other">Other</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-1">Related Tutor (Optional)</label>
+                    <select 
+                      value={newGrievance.assignmentId}
+                      onChange={(e) => setNewGrievance({...newGrievance, assignmentId: e.target.value})}
+                      className="w-full bg-white border border-slate-200 rounded-lg px-3 py-2 text-sm"
+                    >
+                      <option value="">-- Select Tutor --</option>
+                      {assignments.map(asg => (
+                        <option key={asg.id} value={asg.id}>{asg.tutorName}</option>
+                      ))}
+                    </select>
+                  </div>
+                </div>
+                <div>
+                  <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-1">Description</label>
+                  <textarea 
+                    value={newGrievance.description}
+                    onChange={(e) => setNewGrievance({...newGrievance, description: e.target.value})}
+                    className="w-full bg-white border border-slate-200 rounded-lg px-3 py-2 text-sm h-24 resize-none"
+                    placeholder="Describe the issue you are facing in detail..."
+                  ></textarea>
+                </div>
+                <button 
+                  disabled={submitting || !newGrievance.description}
+                  onClick={async () => {
+                    setSubmitting(true);
+                    try {
+                      const res = await fetch('/api/grievance', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+                        body: JSON.stringify({
+                          grievance_type: newGrievance.type,
+                          assignment_id: newGrievance.assignmentId || undefined,
+                          description: newGrievance.description
+                        })
+                      });
+                      if (res.ok) {
+                        const data = await res.json();
+                        setGrievances([data.grievance, ...grievances]);
+                        setNewGrievance({ type: 'Attendance', description: '', assignmentId: '' });
+                        alert("Your grievance has been submitted successfully.");
+                      }
+                    } catch (e) {
+                      console.error(e);
+                    }
+                    setSubmitting(false);
+                  }}
+                  className="bg-indigo-600 text-white px-6 py-2 rounded-lg font-bold hover:bg-indigo-700 disabled:opacity-50"
+                >
+                  {submitting ? 'Submitting...' : 'Submit Grievance'}
+                </button>
+              </div>
+            </div>
+
+            <h4 className="font-bold text-slate-800 mb-3">Your Previous Issues</h4>
+            {grievances.length === 0 ? (
+              <p className="text-slate-500 text-sm">You haven't raised any issues yet.</p>
+            ) : (
+              <div className="space-y-3">
+                {grievances.map(g => (
+                  <div key={g.id} className="border border-slate-200 rounded-lg p-4 bg-white">
+                    <div className="flex items-center justify-between mb-2">
+                      <div className="flex items-center gap-2">
+                        <span className="font-bold text-sm text-slate-800">{g.grievance_type}</span>
+                        <span className="text-xs text-slate-500">{new Date(g.created_at).toLocaleString()}</span>
+                      </div>
+                      <span className={`text-xs font-bold px-2 py-1 rounded ${
+                        g.status === 'Open' ? 'bg-rose-100 text-rose-700' :
+                        g.status === 'In Progress' ? 'bg-amber-100 text-amber-700' :
+                        'bg-emerald-100 text-emerald-700'
+                      }`}>
+                        {g.status}
+                      </span>
+                    </div>
+                    <p className="text-sm text-slate-600 whitespace-pre-wrap">{g.description}</p>
+                  </div>
+                ))}
               </div>
             )}
           </div>

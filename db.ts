@@ -50,6 +50,28 @@ export async function markAttendance(id: string, assignmentId: string, date: str
   await pool.execute(query, [id, assignmentId, date, status, markedBy]);
 }
 
+export async function addGrievance(data: any): Promise<void> {
+  const query = `
+    INSERT INTO grievances (id, user_id, assignment_id, grievance_type, description, status)
+    VALUES (?, ?, ?, ?, ?, ?)
+  `;
+  await pool.execute(query, [data.id, data.user_id, data.assignment_id || null, data.grievance_type, data.description, data.status]);
+}
+
+export async function getGrievancesByUserId(userId: string): Promise<any[]> {
+  const [rows] = await pool.query('SELECT * FROM grievances WHERE user_id = ? ORDER BY created_at DESC', [userId]);
+  return rows as any[];
+}
+
+export async function getAllGrievances(): Promise<any[]> {
+  const [rows] = await pool.query('SELECT * FROM grievances ORDER BY created_at DESC');
+  return rows as any[];
+}
+
+export async function updateGrievanceStatus(id: string, status: string): Promise<void> {
+  await pool.execute('UPDATE grievances SET status = ? WHERE id = ?', [status, id]);
+}
+
 export async function getParentRequestsByUserId(userId: string): Promise<ParentRequest[]> {
   const [rows] = await pool.query('SELECT * FROM parent_requests WHERE user_id = ? ORDER BY createdAt DESC', [userId]);
   return rows as ParentRequest[];

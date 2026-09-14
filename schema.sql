@@ -69,3 +69,13 @@ CREATE TABLE IF NOT EXISTS attendance (
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
     UNIQUE KEY unique_assignment_date (assignment_id, class_date)
 );
+
+CREATE TABLE IF NOT EXISTS grievances (
+    id VARCHAR(50) PRIMARY KEY,
+    user_id VARCHAR(50) NOT NULL,
+    assignment_id VARCHAR(50),
+    grievance_type ENUM('Attendance', 'Tutor Behavior', 'Payment', 'Other') NOT NULL,
+    description TEXT NOT NULL,
+    status ENUM('Open', 'In Progress', 'Resolved') DEFAULT 'Open',
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+);
