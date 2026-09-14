@@ -9,14 +9,7 @@ export const COVERAGE_AREAS: CoverageArea[] = [
     tutorsCount: 3850,
     image: 'https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?auto=format&fit=crop&w=600&q=80'
   },
-  {
-    city: 'Patna',
-    state: 'Bihar',
-    tagline: 'Premier Home Tuition & Board Exam Mentors',
-    popularLocalities: ['Boring Road', 'Kankerbagh', 'Bailey Road', 'Rajendra Nagar', 'Patliputra', 'Anisabad', 'Danapur', 'Fraser Road'],
-    tutorsCount: 4200,
-    image: 'https://images.unsplash.com/photo-1524178232363-1fb2b075b655?auto=format&fit=crop&w=600&q=80'
-  },
+
   {
     city: 'Jamshedpur',
     state: 'Jharkhand',
@@ -71,7 +64,7 @@ export const TESTIMONIALS: Testimonial[] = [
     studentName: 'Ananya Mishra',
     studentClass: 'Class 12 ICSE/ISC',
     board: 'ISC Board',
-    city: 'Boring Road, Patna',
+    city: 'Kadma, Jamshedpur',
     rating: 5,
     reviewText: 'We strictly needed a verified female tutor for Ananya’s Biology and Chemistry. Teachers At Home was extremely prompt and respectful. Priya ma’am was punctual, patient, and conducted practical doubt-clearing sessions.',
     improvementText: 'Biology score: 98/100 in ISC',

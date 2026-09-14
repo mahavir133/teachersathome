@@ -11,6 +11,16 @@ export const pool = mysql.createPool({
   queueLimit: 0
 });
 
+/*export const pool = mysql.createPool({
+  host: process.env.DB_HOST || 'localhost',
+  user: process.env.DB_USER || 'root',
+  password: process.env.DB_PASSWORD || 'Toor$3210!',
+  database: process.env.DB_NAME || 'teachersathome',
+  waitForConnections: true,
+  connectionLimit: 10,
+  queueLimit: 0
+});*/
+
 export async function getTutors(): Promise<Tutor[]> {
   const [rows] = await pool.query('SELECT * FROM tutors ORDER BY rating DESC');
   return rows as Tutor[];

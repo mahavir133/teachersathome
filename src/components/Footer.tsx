@@ -20,7 +20,7 @@ export const Footer: React.FC<FooterProps> = ({ onRequestTutor, onBecomeTutor })
             </div>
 
             <p className="text-slate-400 leading-relaxed max-w-sm">
-              India's premier 1-on-1 home tuition platform connecting students with verified mentors across Ranchi, Patna, Jamshedpur, Dhanbad, Bokaro, Ramgarh & pan-India for CBSE, ICSE, JAC, BSEB & Competitive Exams.
+              India's premier 1-on-1 home tuition platform connecting students with verified mentors across Ranchi, Jamshedpur, Dhanbad, Bokaro, Ramgarh for CBSE, ICSE, JAC & Competitive Exams.
             </p>
 
             <div className="pt-2 flex flex-wrap gap-3">
@@ -64,7 +64,6 @@ export const Footer: React.FC<FooterProps> = ({ onRequestTutor, onBecomeTutor })
               <li>CBSE Board (Class 1-12)</li>
               <li>ICSE / ISC Board</li>
               <li>JAC Board (Jharkhand Academic Council)</li>
-              <li>BSEB Board (Bihar School Board)</li>
               <li>IIT-JEE Main & Advanced</li>
               <li>NEET Medical Preparation</li>
               <li>IB / IGCSE International</li>
@@ -76,12 +75,10 @@ export const Footer: React.FC<FooterProps> = ({ onRequestTutor, onBecomeTutor })
             <h4 className="text-white font-extrabold text-sm uppercase tracking-wider">Coverage Cities</h4>
             <ul className="space-y-2">
               <li>Ranchi (Lalpur, Harmu, Kanke, Bariatu)</li>
-              <li>Patna (Boring Rd, Kankerbagh, Bailey Rd)</li>
               <li>Jamshedpur (Bistupur, Sakchi, Telco)</li>
               <li>Dhanbad (Bank More, Saraidhela)</li>
               <li>Bokaro Steel City (Sector 4, Chas)</li>
               <li>Ramgarh & Hazaribagh</li>
-              <li>Kolkata & Delhi NCR</li>
             </ul>
           </div>
 
@@ -94,7 +91,7 @@ export const Footer: React.FC<FooterProps> = ({ onRequestTutor, onBecomeTutor })
           </div>
 
           <div className="flex items-center gap-1 text-slate-400">
-            <span>Building student confidence across India with</span>
+            <span>Building student confidence across Jharkhand with</span>
             <Heart className="w-3.5 h-3.5 text-rose-500 fill-rose-500 inline" />
           </div>
         </div>

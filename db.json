@@ -55,7 +55,7 @@
       "rating": 5,
       "reviewsCount": 38,
       "title": "Biology & Chemistry Educator",
-      "qualification": "M.Sc Biotechnology (Patna University), Gold Medalist",
+      "qualification": "M.Sc Biotechnology (Ranchi University), Gold Medalist",
       "experienceYears": 6,
       "subjects": [
         "Biology",
@@ -65,11 +65,9 @@
       ],
       "boards": [
         "CBSE",
-        "ICSE/ISC",
-        "BSEB"
+        "ICSE/ISC"
       ],
       "cities": [
-        "Patna",
         "Ranchi"
       ],
       "localities": [
@@ -158,8 +156,7 @@
       "boards": [
         "CBSE",
         "ICSE/ISC",
-        "JAC",
-        "BSEB"
+        "JAC"
       ],
       "cities": [
         "Ranchi",
@@ -203,12 +200,9 @@
       "boards": [
         "CBSE",
         "ICSE/ISC",
-        "JAC",
-        "BSEB"
+        "JAC"
       ],
       "cities": [
-        "Patna",
-        "Gaya",
         "Ranchi"
       ],
       "localities": [
@@ -299,7 +293,6 @@
       ],
       "cities": [
         "Jamshedpur",
-        "Kolkata",
         "Ranchi"
       ],
       "localities": [
@@ -339,12 +332,10 @@
       ],
       "boards": [
         "JAC",
-        "BSEB",
         "CBSE"
       ],
       "cities": [
         "Ranchi",
-        "Patna",
         "Hazaribagh"
       ],
       "localities": [
@@ -357,7 +348,7 @@
       "pricePerMonth": 2500,
       "gender": "Female",
       "mode": "Home Tuition",
-      "bio": "Decades of experience in JAC (Jharkhand Board) and BSEB (Bihar Board) syllabus pattern. Ensures complete textbook answer writing skills for high board percentages.",
+      "bio": "Decades of experience in JAC (Jharkhand Board) syllabus pattern. Ensures complete textbook answer writing skills for high board percentages.",
       "verified": true,
       "phone": "+91 83405 43395",
       "badge": "State Board Guru",

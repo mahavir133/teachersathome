@@ -62,7 +62,7 @@ export const Hero: React.FC<HeroProps> = ({ onRequestDemoWithDetails, onExploreT
 
             {/* Sub-headline */}
             <p className="text-[#E2E6D5] text-base sm:text-lg font-normal leading-relaxed max-w-2xl">
-              Empowering students in <span className="text-white font-semibold underline decoration-[#708238]">Ranchi, Patna, Jamshedpur, Dhanbad, Bokaro</span> & across India with 1-on-1 personalized home tuition for <span className="text-white font-semibold">CBSE, ICSE, JAC, BSEB</span> & Competitive Exams.
+              Empowering students in <span className="text-white font-semibold underline decoration-[#708238]">Ranchi, Jamshedpur, Dhanbad, Bokaro, Ramgarh</span> with 1-on-1 personalized home tuition for <span className="text-white font-semibold">CBSE, ICSE, JAC</span> & Competitive Exams.
             </p>
 
             {/* Core USPs Checklist */}
@@ -158,7 +158,7 @@ export const Hero: React.FC<HeroProps> = ({ onRequestDemoWithDetails, onExploreT
                     Educational Board
                   </label>
                   <div className="grid grid-cols-3 gap-2">
-                    {(['CBSE', 'ICSE/ISC', 'JAC', 'BSEB', 'State Board', 'IB/IGCSE'] as BoardType[]).map((board) => (
+                    {(['CBSE', 'ICSE/ISC', 'JAC', 'State Board', 'IB/IGCSE'] as BoardType[]).map((board) => (
                       <button
                         type="button"
                         key={board}
@@ -186,14 +186,10 @@ export const Hero: React.FC<HeroProps> = ({ onRequestDemoWithDetails, onExploreT
                     className="w-full bg-[#FAF9F6] border border-[#D1D5CB] rounded-lg px-3.5 py-2.5 text-sm font-semibold text-[#2C3317] focus:ring-2 focus:ring-[#708238] focus:outline-none"
                   >
                     <option value="Ranchi">Ranchi (Lalpur, Harmu, Kanke, Bariatu, Doranda...)</option>
-                    <option value="Patna">Patna (Boring Road, Kankerbagh, Bailey Road...)</option>
                     <option value="Jamshedpur">Jamshedpur (Bistupur, Sakchi, Telco, Sonari...)</option>
                     <option value="Dhanbad">Dhanbad (Bank More, Saraidhela, Hirapur...)</option>
                     <option value="Bokaro">Bokaro Steel City (Sector 4, Chas...)</option>
                     <option value="Ramgarh">Ramgarh & Hazaribagh</option>
-                    <option value="Kolkata">Kolkata & Howrah</option>
-                    <option value="Delhi NCR">Delhi NCR / Gurgaon / Noida</option>
-                    <option value="Other City">Other City in India</option>
                   </select>
                 </div>
 

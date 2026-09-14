@@ -12,7 +12,7 @@ export const Testimonials: React.FC = () => {
             Verified Success Stories
           </span>
           <h2 className="text-2xl sm:text-3xl font-extrabold text-[#2C3317] tracking-tight mt-3">
-            Trusted by 25,000+ Happy Parents Across Jharkhand & Bihar
+            Trusted by 25,000+ Happy Parents Across Jharkhand
           </h2>
           <p className="text-sm text-[#5C6348] mt-2">
             Read real feedback from parents who transformed their children’s academic confidence and board results with Teachers At Home.

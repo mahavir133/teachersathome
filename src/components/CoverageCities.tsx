@@ -29,7 +29,7 @@ export const CoverageCities: React.FC<CoverageCitiesProps> = ({ onSelectCityFilt
             Presence & Coverage Network
           </span>
           <h2 className="text-2xl sm:text-3xl font-extrabold text-[#2C3317] tracking-tight mt-3">
-            Serving Top Cities Across Jharkhand, Bihar & Pan-India
+            Serving Top Cities Across Jharkhand
           </h2>
           <p className="text-sm text-[#5C6348] mt-2">
             Our network of over 10,000 verified home tutors covers major residential sectors, colonies, and academic hubs.

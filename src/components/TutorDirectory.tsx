@@ -104,7 +104,7 @@ export const TutorDirectory: React.FC<TutorDirectoryProps> = ({ tutors, onReques
               >
                 <option value="All">All Cities</option>
                 <option value="Ranchi">Ranchi</option>
-                <option value="Patna">Patna</option>
+
                 <option value="Jamshedpur">Jamshedpur</option>
                 <option value="Dhanbad">Dhanbad</option>
                 <option value="Bokaro">Bokaro</option>
@@ -124,7 +124,7 @@ export const TutorDirectory: React.FC<TutorDirectoryProps> = ({ tutors, onReques
                 <option value="CBSE">CBSE</option>
                 <option value="ICSE/ISC">ICSE / ISC</option>
                 <option value="JAC">JAC (Jharkhand)</option>
-                <option value="BSEB">BSEB (Bihar)</option>
+
               </select>
             </div>
 

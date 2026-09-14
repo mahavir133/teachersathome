@@ -261,7 +261,7 @@ export const RequestTutorModal: React.FC<RequestTutorModalProps> = ({
                     <option value="CBSE">CBSE Board</option>
                     <option value="ICSE/ISC">ICSE / ISC Board</option>
                     <option value="JAC">JAC (Jharkhand State Board)</option>
-                    <option value="BSEB">BSEB (Bihar State Board)</option>
+
                     <option value="State Board">Other State Board</option>
                     <option value="IB/IGCSE">IB / IGCSE Board</option>
                   </select>
@@ -306,7 +306,7 @@ export const RequestTutorModal: React.FC<RequestTutorModalProps> = ({
                     className="w-full bg-[#FAF9F6] border border-[#D1D5CB] rounded-xl px-3 py-2 font-semibold text-[#2C3317]"
                   >
                     <option value="Ranchi">Ranchi</option>
-                    <option value="Patna">Patna</option>
+
                     <option value="Jamshedpur">Jamshedpur</option>
                     <option value="Dhanbad">Dhanbad</option>
                     <option value="Bokaro">Bokaro</option>

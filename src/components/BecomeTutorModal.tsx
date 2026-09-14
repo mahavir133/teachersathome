@@ -33,7 +33,7 @@ export const BecomeTutorModal: React.FC<BecomeTutorModalProps> = ({ isOpen, onCl
     'Primary All Subjects'
   ];
 
-  const cityList = ['Ranchi', 'Patna', 'Jamshedpur', 'Dhanbad', 'Bokaro', 'Ramgarh'];
+  const cityList = ['Ranchi', 'Jamshedpur', 'Dhanbad', 'Bokaro', 'Ramgarh'];
 
   const toggleSubject = (s: string) => {
     if (subjects.includes(s)) setSubjects(subjects.filter((x) => x !== s));

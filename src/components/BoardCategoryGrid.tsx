@@ -36,15 +36,7 @@ export const BoardCategoryGrid: React.FC<BoardCategoryGridProps> = ({ onSelectBo
       color: 'from-emerald-600 to-teal-800',
       badge: 'Jharkhand State Hub'
     },
-    {
-      title: 'BSEB Board (Bihar)',
-      subtitle: 'Bihar School Examination Board',
-      classes: 'Class 1st to 12th Matric & Inter',
-      desc: 'Expert mentors in Patna, Gaya & Bihar cities for high scoring in BSEB objective + subjective paper formats.',
-      boardKey: 'BSEB' as BoardType,
-      color: 'from-amber-600 to-orange-700',
-      badge: 'Bihar State Special'
-    },
+
     {
       title: 'IIT-JEE & NEET Medical',
       subtitle: 'Engineering & Medical Entrance Coaching',
