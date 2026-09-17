@@ -16,6 +16,7 @@ import { BecomeTutorModal } from './components/BecomeTutorModal';
 import { AdminConsoleDrawer } from './components/AdminConsoleDrawer';
 import { Tutor, ParentRequest, BoardType } from './types';
 import { Sparkles, X, MessageSquare } from 'lucide-react';
+import { VidyaMitraChatbot } from './components/VidyaMitraChatbot';
 import { Routes, Route } from 'react-router-dom';
 import { AuthModal } from './components/AuthModal';
 import { Dashboard } from './pages/Dashboard';
@@ -122,11 +123,7 @@ function LandingPage() {
           onRequestDemoWithDetails={handleQuickDemoFromHeroOrCalc}
         />
 
-        {/* Tutor Directory */}
-        <TutorDirectory
-          tutors={tutors}
-          onRequestSpecificTutor={(tutor) => handleOpenRequestModal(tutor)}
-        />
+
 
         {/* Boards Category Grid */}
         <BoardCategoryGrid
@@ -182,6 +179,8 @@ function LandingPage() {
 
 
 
+
+      <VidyaMitraChatbot />
 
       <AdminConsoleDrawer
         isOpen={adminConsoleOpen}

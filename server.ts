@@ -218,6 +218,54 @@ ${tutorProfilesContext}`;
   }
 });
 
+app.post("/api/chat/vidyamitra", async (req, res) => {
+  try {
+    const { message, history } = req.body;
+    
+    // Format history for OpenAI
+    const formattedHistory = (history || []).map((msg: any) => ({
+      role: msg.role === 'bot' ? 'assistant' : 'user',
+      content: msg.content
+    }));
+
+    const messages = [
+      {
+        role: "system",
+        content: "You are VidyaMitra, a friendly, concise, and highly knowledgeable AI study assistant for 'Teachers At Home', an educational portal based in Jharkhand, India. Your ONLY job is to answer study-related queries, provide board exam strategies (CBSE, ICSE, JAC), offer tips for IIT-JEE/NEET preparation, and help parents/students understand how to find the right home tutor on the Teachers At Home portal. If a user asks you questions that are not related to studies, tutoring, or education, you must politely decline and guide the conversation back to their academics. Keep your answers brief, encouraging, and use bullet points for readability."
+      },
+      ...formattedHistory,
+      { role: "user", content: message }
+    ];
+
+    const OPENAI_API_KEY = process.env.OPENAI_API_KEY || "";
+
+    const response = await fetch("https://api.openai.com/v1/chat/completions", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${OPENAI_API_KEY}`
+      },
+      body: JSON.stringify({
+        model: "gpt-4o-mini",
+        messages,
+        temperature: 0.7,
+        max_tokens: 500
+      })
+    });
+
+    const data = await response.json();
+    if (data.error) {
+      console.error("OpenAI API Error:", data.error);
+      return res.status(500).json({ error: "Sorry, I am having trouble thinking right now." });
+    }
+
+    res.json({ reply: data.choices[0].message.content });
+  } catch (error) {
+    console.error("Chatbot Error:", error);
+    res.status(500).json({ error: "Failed to communicate with VidyaMitra." });
+  }
+});
+
 app.post("/api/parent-request", async (req, res) => {
   try {
     let userId = null;

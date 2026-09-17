@@ -3,18 +3,23 @@ import { Clock, MapPin, Sparkles, Receipt, UserPlus, IndianRupee, Calendar, Aler
 import { ParentRequest } from '../types';
 import { useAuth } from '../AuthContext';
 import { AttendanceCalendar } from './AttendanceCalendar';
+import { TutorDirectory } from './TutorDirectory';
+import { RequestTutorModal } from './RequestTutorModal';
 
 export function ParentDashboard() {
   const { token } = useAuth();
   const [requests, setRequests] = useState<ParentRequest[]>([]);
   const [assignments, setAssignments] = useState<any[]>([]);
   const [fees, setFees] = useState<any[]>([]);
+  const [tutors, setTutors] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
-  const [activeTab, setActiveTab] = useState<'requests' | 'assignments' | 'fees' | 'attendance' | 'grievances'>('requests');
+  const [activeTab, setActiveTab] = useState<'requests' | 'assignments' | 'fees' | 'attendance' | 'grievances' | 'tutors'>('tutors');
   const [selectedAssignmentId, setSelectedAssignmentId] = useState<string>('');
   const [grievances, setGrievances] = useState<any[]>([]);
   const [newGrievance, setNewGrievance] = useState({ type: 'Attendance', description: '', assignmentId: '' });
   const [submitting, setSubmitting] = useState(false);
+  const [isRequestModalOpen, setIsRequestModalOpen] = useState(false);
+  const [selectedTutorForRequest, setSelectedTutorForRequest] = useState<any>(null);
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -51,6 +56,12 @@ export function ParentDashboard() {
           const grvData = await resGrv.json();
           setGrievances(grvData || []);
         }
+
+        const resTutors = await fetch('/api/tutors');
+        if (resTutors.ok) {
+          const tutorsData = await resTutors.json();
+          setTutors(tutorsData || []);
+        }
       } catch (err) {
         console.error('Failed to load user data', err);
       } finally {
@@ -67,10 +78,18 @@ export function ParentDashboard() {
         <p className="text-sm text-indigo-200 mt-1">Track your demo requests, assigned tutors, and payment history.</p>
       </div>
 
-      <div className="flex border-b border-slate-200">
+      <div className="flex border-b border-slate-200 overflow-x-auto">
+        <button
+          onClick={() => setActiveTab('tutors')}
+          className={`flex items-center gap-2 px-6 py-3 font-bold text-sm transition-colors border-b-2 whitespace-nowrap ${
+            activeTab === 'tutors' ? 'border-indigo-600 text-indigo-600' : 'border-transparent text-slate-500 hover:text-slate-800'
+          }`}
+        >
+          <Sparkles className="w-4 h-4" /> Find Tutors
+        </button>
         <button
           onClick={() => setActiveTab('requests')}
-          className={`flex items-center gap-2 px-6 py-3 font-bold text-sm transition-colors border-b-2 ${
+          className={`flex items-center gap-2 px-6 py-3 font-bold text-sm transition-colors border-b-2 whitespace-nowrap ${
             activeTab === 'requests' ? 'border-indigo-600 text-indigo-600' : 'border-transparent text-slate-500 hover:text-slate-800'
           }`}
         >
@@ -78,7 +97,7 @@ export function ParentDashboard() {
         </button>
         <button
           onClick={() => setActiveTab('assignments')}
-          className={`flex items-center gap-2 px-6 py-3 font-bold text-sm transition-colors border-b-2 ${
+          className={`flex items-center gap-2 px-6 py-3 font-bold text-sm transition-colors border-b-2 whitespace-nowrap ${
             activeTab === 'assignments' ? 'border-indigo-600 text-indigo-600' : 'border-transparent text-slate-500 hover:text-slate-800'
           }`}
         >
@@ -86,7 +105,7 @@ export function ParentDashboard() {
         </button>
         <button
           onClick={() => setActiveTab('fees')}
-          className={`flex items-center gap-2 px-6 py-3 font-bold text-sm transition-colors border-b-2 ${
+          className={`flex items-center gap-2 px-6 py-3 font-bold text-sm transition-colors border-b-2 whitespace-nowrap ${
             activeTab === 'fees' ? 'border-indigo-600 text-indigo-600' : 'border-transparent text-slate-500 hover:text-slate-800'
           }`}
         >
@@ -94,7 +113,7 @@ export function ParentDashboard() {
         </button>
         <button
           onClick={() => setActiveTab('attendance')}
-          className={`flex items-center gap-2 px-6 py-3 font-bold text-sm transition-colors border-b-2 ${
+          className={`flex items-center gap-2 px-6 py-3 font-bold text-sm transition-colors border-b-2 whitespace-nowrap ${
             activeTab === 'attendance' ? 'border-indigo-600 text-indigo-600' : 'border-transparent text-slate-500 hover:text-slate-800'
           }`}
         >
@@ -102,7 +121,7 @@ export function ParentDashboard() {
         </button>
         <button
           onClick={() => setActiveTab('grievances')}
-          className={`flex items-center gap-2 px-6 py-3 font-bold text-sm transition-colors border-b-2 ${
+          className={`flex items-center gap-2 px-6 py-3 font-bold text-sm transition-colors border-b-2 whitespace-nowrap ${
             activeTab === 'grievances' ? 'border-indigo-600 text-indigo-600' : 'border-transparent text-slate-500 hover:text-slate-800'
           }`}
         >
@@ -112,6 +131,18 @@ export function ParentDashboard() {
 
       <div className="bg-white p-6 rounded-xl border border-slate-200 shadow-sm min-h-[400px]">
         
+        {activeTab === 'tutors' && (
+          <div>
+            <TutorDirectory 
+              tutors={tutors} 
+              onRequestSpecificTutor={(tutor) => {
+                setSelectedTutorForRequest(tutor);
+                setIsRequestModalOpen(true);
+              }}
+            />
+          </div>
+        )}
+
         {activeTab === 'requests' && (
           <div>
             <h3 className="text-lg font-bold text-slate-800 mb-4 border-b border-slate-100 pb-2">My Demo Requests</h3>
@@ -387,6 +418,15 @@ export function ParentDashboard() {
         )}
 
       </div>
+      
+      <RequestTutorModal
+        isOpen={isRequestModalOpen}
+        onClose={() => {
+          setIsRequestModalOpen(false);
+          setSelectedTutorForRequest(null);
+        }}
+        preSelectedTutor={selectedTutorForRequest}
+      />
     </div>
   );
 }
