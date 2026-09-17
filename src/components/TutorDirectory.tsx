@@ -288,17 +288,10 @@ export const TutorDirectory: React.FC<TutorDirectoryProps> = ({ tutors, onReques
               </div>
 
               {/* Footer Price & Action */}
-              <div className="p-4 bg-[#F2F4EF] border-t border-[#E6E8E1] flex items-center justify-between gap-2">
-                <div>
-                  <div className="text-xs font-bold text-[#5C6348]">Starting Monthly Fee</div>
-                  <div className="text-base font-black text-[#2C3317]">
-                    ₹{tutor.pricePerMonth.toLocaleString('en-IN')}<span className="text-xs font-normal text-[#5C6348]">/mo</span>
-                  </div>
-                </div>
-
+              <div className="p-4 bg-[#F2F4EF] border-t border-[#E6E8E1] flex items-center justify-center">
                 <button
                   onClick={() => onRequestSpecificTutor(tutor)}
-                  className="px-5 py-2.5 bg-[#708238] hover:bg-[#5A692D] text-white font-extrabold text-xs rounded-full shadow-xs hover:shadow-md transition-all cursor-pointer flex items-center gap-1.5"
+                  className="w-full py-2.5 bg-[#708238] hover:bg-[#5A692D] text-white font-extrabold text-xs rounded-full shadow-xs hover:shadow-md transition-all cursor-pointer flex items-center justify-center gap-1.5"
                 >
                   <Sparkles className="w-3.5 h-3.5" />
                   <span>Book Free Demo</span>
