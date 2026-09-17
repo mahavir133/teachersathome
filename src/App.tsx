@@ -15,7 +15,7 @@ import { RequestTutorModal } from './components/RequestTutorModal';
 import { BecomeTutorModal } from './components/BecomeTutorModal';
 import { AdminConsoleDrawer } from './components/AdminConsoleDrawer';
 import { Tutor, ParentRequest, BoardType } from './types';
-import { Sparkles, X } from 'lucide-react';
+import { Sparkles, X, MessageSquare } from 'lucide-react';
 import { Routes, Route } from 'react-router-dom';
 import { AuthModal } from './components/AuthModal';
 import { Dashboard } from './pages/Dashboard';
@@ -188,6 +188,17 @@ function LandingPage() {
         onClose={() => setAdminConsoleOpen(false)}
         onRefreshTutors={fetchTutors}
       />
+
+      {/* Floating WhatsApp Button (Desktop) */}
+      <a
+        href="https://wa.me/918340543395?text=Hello%20Teachers%20At%20Home"
+        target="_blank"
+        rel="noopener noreferrer"
+        className="hidden md:flex fixed bottom-6 right-6 z-50 items-center justify-center p-4 bg-[#25D366] text-white rounded-full shadow-2xl hover:scale-110 transition-transform cursor-pointer"
+        title="Chat with us on WhatsApp"
+      >
+        <MessageSquare className="w-7 h-7" />
+      </a>
 
       {/* Floating Action Bar for Mobile */}
       <div className="fixed bottom-4 right-4 z-40 md:hidden flex items-center gap-2">
