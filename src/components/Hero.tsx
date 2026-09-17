@@ -44,7 +44,7 @@ export const Hero: React.FC<HeroProps> = ({ onRequestDemoWithDetails, onExploreT
       <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-[#708238]/10 rounded-full blur-3xl pointer-events-none" />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start lg:pt-6">
           
           {/* Left Column: Headlines & Benefits */}
           <div className="lg:col-span-7 space-y-6">
@@ -52,7 +52,7 @@ export const Hero: React.FC<HeroProps> = ({ onRequestDemoWithDetails, onExploreT
             {/* Top Verified Badge */}
             <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#708238]/25 border border-[#708238]/40 text-[#E9EDDE] text-xs font-bold tracking-wide">
               <ShieldCheck className="w-4 h-4 text-[#E9EDDE]" />
-              <span>India's Most Trusted Home Tutor Provider • 100% Verified Mentors</span>
+              <span>Jharkhand's Most Trusted Home Tutor Provider • 100% Verified Mentors</span>
             </div>
 
             {/* Main Headline */}
@@ -85,28 +85,30 @@ export const Hero: React.FC<HeroProps> = ({ onRequestDemoWithDetails, onExploreT
               </div>
             </div>
 
-            {/* Quick Stats Banner */}
-            <div className="pt-6 border-t border-[#3D441E]/80 flex flex-wrap items-center gap-8">
-              <div>
-                <div className="text-2xl sm:text-3xl font-black text-white">10,000+</div>
-                <div className="text-xs text-[#D1D5CB] font-medium">Verified Tutors</div>
-              </div>
 
-              <div className="h-8 w-px bg-[#5C6348] hidden sm:block" />
 
-              <div>
-                <div className="text-2xl sm:text-3xl font-black text-white">25,000+</div>
-                <div className="text-xs text-[#D1D5CB] font-medium">Happy Students</div>
-              </div>
-
-              <div className="h-8 w-px bg-[#5C6348] hidden sm:block" />
-
-              <div>
-                <div className="flex items-center gap-1 text-2xl sm:text-3xl font-black text-[#E9EDDE]">
-                  <span>4.9</span>
-                  <Star className="w-5 h-5 fill-[#E9EDDE]" />
+            {/* Trust & Guarantee Banners */}
+            <div className="pt-6 grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div className="bg-gradient-to-br from-[#3D441E]/80 to-[#2C3317]/80 border border-[#5C6348]/50 rounded-2xl p-4 flex items-center gap-3.5 shadow-lg relative overflow-hidden group">
+                <div className="absolute inset-0 bg-white/5 opacity-0 group-hover:opacity-100 transition-opacity" />
+                <div className="w-12 h-12 bg-[#708238] rounded-xl flex items-center justify-center shrink-0 rotate-3 group-hover:rotate-6 transition-transform">
+                  <Award className="w-6 h-6 text-[#E9EDDE]" />
                 </div>
-                <div className="text-xs text-[#D1D5CB] font-medium">1,200+ Parent Reviews</div>
+                <div>
+                  <h4 className="text-sm font-black text-white">100% Satisfaction</h4>
+                  <p className="text-xs text-[#D1D5CB] mt-0.5 leading-snug">Guaranteed improvement or free tutor replacement.</p>
+                </div>
+              </div>
+
+              <div className="bg-gradient-to-br from-[#3D441E]/80 to-[#2C3317]/80 border border-[#5C6348]/50 rounded-2xl p-4 flex items-center gap-3.5 shadow-lg relative overflow-hidden group">
+                <div className="absolute inset-0 bg-white/5 opacity-0 group-hover:opacity-100 transition-opacity" />
+                <div className="w-12 h-12 bg-emerald-600/90 rounded-xl flex items-center justify-center shrink-0 -rotate-3 group-hover:-rotate-6 transition-transform">
+                  <ShieldCheck className="w-6 h-6 text-white" />
+                </div>
+                <div>
+                  <h4 className="text-sm font-black text-white">Verified Mentors</h4>
+                  <p className="text-xs text-[#D1D5CB] mt-0.5 leading-snug">Rigorous 5-step background & academic check.</p>
+                </div>
               </div>
             </div>
 

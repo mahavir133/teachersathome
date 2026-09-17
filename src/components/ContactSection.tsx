@@ -75,7 +75,7 @@ export const ContactSection: React.FC = () => {
 
                 <div className="flex items-center gap-2 text-[#D1D5CB] font-medium">
                   <Mail className="w-4 h-4 text-[#708238] shrink-0" />
-                  <span>Email: support@teachersathome.in</span>
+                  <span>Email: teachersathomern@gmail.com</span>
                 </div>
               </div>
 

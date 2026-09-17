@@ -73,9 +73,7 @@ export const CoverageCities: React.FC<CoverageCitiesProps> = ({ onSelectCityFilt
                       <h3 className="text-lg font-black">{area.city}</h3>
                       <p className="text-xs text-[#E9EDDE]">{area.state}</p>
                     </div>
-                    <span className="bg-[#708238] text-white text-[10px] font-black px-2.5 py-0.5 rounded-full">
-                      {area.tutorsCount}+ Tutors
-                    </span>
+
                   </div>
                 </div>
               </div>

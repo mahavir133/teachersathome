@@ -11,7 +11,7 @@ export const Footer: React.FC<FooterProps> = ({ onRequestTutor, onBecomeTutor })
     <footer className="bg-slate-950 text-slate-400 text-xs border-t border-slate-900">
       
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-8">
           
           {/* Col 1: Brand */}
           <div className="lg:col-span-2 space-y-4">
@@ -80,6 +80,21 @@ export const Footer: React.FC<FooterProps> = ({ onRequestTutor, onBecomeTutor })
               <li>Bokaro Steel City (Sector 4, Chas)</li>
               <li>Ramgarh & Hazaribagh</li>
             </ul>
+          </div>
+
+          {/* Col 5: Contact Address */}
+          <div className="space-y-3">
+            <h4 className="text-white font-extrabold text-sm uppercase tracking-wider">Office Address</h4>
+            <div className="flex items-start gap-2 mt-2 text-slate-400">
+              <MapPin className="w-4 h-4 text-emerald-500 shrink-0 mt-0.5" />
+              <ul className="space-y-1">
+                <li className="font-semibold text-slate-300">EduQuest</li>
+                <li>Near Panchsil Nagar more,</li>
+                <li>Above Sharda Medical,</li>
+                <li>Ratu Road, Ranchi,</li>
+                <li>Jharkhand - 834005</li>
+              </ul>
+            </div>
           </div>
 
         </div>
