@@ -9,7 +9,7 @@
 </head>
 <body>
 <aside><div class="brand"><span class="logo">⌂</span><div>TeachersAtHome<small>ADMIN WORKSPACE</small></div></div><div class="navlabel">WORKSPACE</div><nav aria-label="Main navigation"><button class="active" data-nav="overview">▦ <span>Overview</span></button><button data-nav="requests">▤ <span>Parent requests</span></button><button data-nav="tutors">♧ <span>Tutors</span></button><button data-nav="applications">▧ <span>Applications</span></button><button data-nav="assignments">⇄ <span>Assignments</span></button><button data-nav="payments">▣ <span>Fee collections</span></button><button data-nav="attendance">▥ <span>Attendance</span></button><button data-nav="grievances">⚑ <span>Grievances</span></button></nav><div class="sidefoot"><b style="color:#425b4c">A little guidance. A big future.</b><br>Your learning community, in one place.<br><br>● &nbsp; Local demo workspace</div></aside>
-<main><header><div class="breadcrumb">Workspace &nbsp; / &nbsp; <b style="color:#4e6456">Overview</b></div><div class="header-right"><a href="/" class="textbtn" style="margin-right: 15px; font-weight: bold; text-decoration: none;">← Back to Home</a><span style="font-size:12px">Admin</span><span class="avatar">AT</span></div></header>
+<main><header><div class="breadcrumb">Workspace &nbsp; / &nbsp; <b style="color:#4e6456">Overview</b></div><div class="header-right"><a href="/dashboard" class="textbtn" style="margin-right: 15px; font-weight: bold; text-decoration: none;">← Back</a><span style="font-size:12px">Admin</span><span class="avatar">AT</span></div></header>
 <section class="intro"><div><div class="eyebrow">YOUR COMMUNITY AT A GLANCE</div><h1>Good morning, Admin <span style="color:#b69f66">☀</span></h1><p>Here’s what’s happening at TeachersAtHome.</p></div><button class="btn primary" id="exportOverview">↓ &nbsp; Export overview</button></section>
 <div class="filters"><select id="period" aria-label="Date range"><option value="all">September 2026</option><option value="week">Last 7 days · Sep 23–29</option></select><select id="city" aria-label="City"><option value="all">All cities</option><option>Ranchi</option><option>Patna</option><option>Jamshedpur</option><option>Bokaro</option><option>Dhanbad</option></select><select id="mode" aria-label="Teaching mode"><option value="all">All teaching modes</option><option>Home</option><option>Online</option></select><button class="textbtn" id="reset">Reset filters</button><span class="filterhint">As of Sep 29, 2026 · Click any metric to explore ↗</span></div>
 <section class="stats" id="stats" aria-label="Dashboard metrics"></section>
@@ -23,6 +23,13 @@
 let db = { tutors: [], requests: [], applications: [], assignments: [], payments: [], attendance: [], grievances: [] };
 async function loadData() {
   try {
+    const userStr = localStorage.getItem('auth_user');
+    const user = userStr ? JSON.parse(userStr) : null;
+    if (!user || user.role !== 'ADMIN') {
+      alert('Unauthorized. Admin access required.');
+      window.location.href = '/';
+      return;
+    }
     const token = localStorage.getItem('auth_token');
     const headers = { 'Authorization': \`Bearer \${token}\` };
     const [tutorsRes, requestsRes, asgRes, feeRes, attRes, grvRes] = await Promise.all([
