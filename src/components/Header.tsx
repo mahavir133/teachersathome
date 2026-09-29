@@ -128,24 +128,13 @@ export const Header: React.FC<HeaderProps> = ({
 
         {/* Action Buttons */}
         <div className="hidden md:flex items-center gap-3">
-          {user ? (
-            <button
-              onClick={() => navigate('/dashboard')}
-              className="flex items-center gap-1.5 px-3.5 py-2 text-xs font-extrabold text-white bg-indigo-950 hover:bg-indigo-900 border border-indigo-900 rounded-full transition-colors cursor-pointer"
-              title="My Dashboard"
-            >
-              <User className="w-3.5 h-3.5" />
-              <span>Dashboard</span>
-            </button>
-          ) : (
-            <button
-              onClick={onOpenAuth}
-              className="flex items-center gap-1.5 px-3.5 py-2 text-xs font-bold text-[#2C3317] bg-white hover:bg-slate-50 border border-slate-300 rounded-full transition-colors cursor-pointer"
-            >
-              <LogIn className="w-3.5 h-3.5 text-slate-600" />
-              <span>Login</span>
-            </button>
-          )}
+          <button
+            onClick={onOpenAuth}
+            className="flex items-center gap-1.5 px-3.5 py-2 text-xs font-bold text-[#2C3317] bg-white hover:bg-slate-50 border border-slate-300 rounded-full transition-colors cursor-pointer"
+          >
+            <LogIn className="w-3.5 h-3.5 text-slate-600" />
+            <span>Login</span>
+          </button>
 
           <button
             onClick={onBecomeTutor}
@@ -202,23 +191,13 @@ export const Header: React.FC<HeaderProps> = ({
               <span>Join as Tutor</span>
             </button>
             
-            {user ? (
-              <button
-                onClick={() => { setMobileMenuOpen(false); navigate('/dashboard'); }}
-                className="w-full py-2 px-3 text-xs font-bold text-white bg-indigo-950 hover:bg-indigo-900 border border-indigo-900 rounded-full flex items-center justify-center gap-1 col-span-2"
-              >
-                <User className="w-3.5 h-3.5" />
-                <span>My Dashboard</span>
-              </button>
-            ) : (
-              <button
-                onClick={() => { setMobileMenuOpen(false); onOpenAuth(); }}
-                className="w-full py-2 px-3 text-xs font-bold text-slate-700 bg-white border border-slate-300 rounded-full flex items-center justify-center gap-1 col-span-2"
-              >
-                <LogIn className="w-3.5 h-3.5 text-slate-600" />
-                <span>Login</span>
-              </button>
-            )}
+            <button
+              onClick={() => { setMobileMenuOpen(false); onOpenAuth(); }}
+              className="w-full py-2 px-3 text-xs font-bold text-slate-700 bg-white border border-slate-300 rounded-full flex items-center justify-center gap-1 col-span-2"
+            >
+              <LogIn className="w-3.5 h-3.5 text-slate-600" />
+              <span>Login</span>
+            </button>
           </div>
 
           <div className="flex flex-col space-y-2 text-sm font-medium text-[#3D441E] pt-1">
