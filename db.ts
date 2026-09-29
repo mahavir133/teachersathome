@@ -41,6 +41,12 @@ export async function getAttendanceByAssignment(assignmentId: string): Promise<a
   return rows as any[];
 }
 
+export async function getAllAttendance(): Promise<any[]> {
+  const [rows] = await pool.query('SELECT * FROM attendance ORDER BY class_date DESC');
+  return rows as any[];
+}
+
+
 export async function markAttendance(id: string, assignmentId: string, date: string, status: string, markedBy: string): Promise<void> {
   const query = `
     INSERT INTO attendance (id, assignment_id, class_date, status, marked_by)

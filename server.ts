@@ -27,7 +27,7 @@ const ai = new GoogleGenAI({
   }
 });
 
-import { pool, getTutors, getParentRequests, getTutorApplications, addParentRequest, addTutorApplication, approveTutorApplication, rejectTutorApplication, updateParentRequestStatus, getUserByEmail, createUser, getParentRequestsByUserId, getTutorApplicationByUserId, getTutorByUserId, linkParentRequests, linkTutorApplications, addLegacyTutor, getAssignments, createAssignment, getFeeCollections, addFeeCollection, getMonthlyFeeStats, updateAssignment, deleteAssignment, updateFeeCollection, deleteFeeCollection, getParentAssignmentsByUserId, getTutorAssignmentsByUserId, getParentFeeCollectionsByUserId, getTutorFeeCollectionsByUserId, getAttendanceByAssignment, markAttendance, addGrievance, getGrievancesByUserId, getAllGrievances, updateGrievanceStatus } from "./db.js";
+import { pool, getTutors, getParentRequests, getTutorApplications, addParentRequest, addTutorApplication, approveTutorApplication, rejectTutorApplication, updateParentRequestStatus, getUserByEmail, createUser, getParentRequestsByUserId, getTutorApplicationByUserId, getTutorByUserId, linkParentRequests, linkTutorApplications, addLegacyTutor, getAssignments, createAssignment, getFeeCollections, addFeeCollection, getMonthlyFeeStats, updateAssignment, deleteAssignment, updateFeeCollection, deleteFeeCollection, getParentAssignmentsByUserId, getTutorAssignmentsByUserId, getParentFeeCollectionsByUserId, getTutorFeeCollectionsByUserId, getAttendanceByAssignment, markAttendance, addGrievance, getGrievancesByUserId, getAllGrievances, updateGrievanceStatus, getAllAttendance } from "./db.js";
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 
@@ -638,6 +638,18 @@ app.get("/api/attendance", authenticateToken, async (req, res) => {
   } catch (err: any) {
     console.error(err);
     res.status(500).json({ error: "Failed to fetch attendance" });
+  }
+});
+
+app.get("/api/admin/attendance", authenticateToken, async (req, res) => {
+  const userReq = req as any;
+  if (userReq.user.role !== 'ADMIN') return res.status(403).json({ error: "Unauthorized" });
+  try {
+    const records = await getAllAttendance();
+    res.json(records);
+  } catch (err: any) {
+    console.error(err);
+    res.status(500).json({ error: "Failed to fetch all attendance records" });
   }
 });
 
