@@ -136,8 +136,8 @@ export async function approveTutorApplication(id: string, tutor: Tutor): Promise
     ];
     await connection.execute(insertTutorQuery, tutorValues);
 
-    const deleteAppQuery = 'DELETE FROM tutor_applications WHERE id = ?';
-    await connection.execute(deleteAppQuery, [id]);
+    const updateAppQuery = 'UPDATE tutor_applications SET status = ? WHERE id = ?';
+    await connection.execute(updateAppQuery, ['Approved', id]);
 
     await connection.commit();
   } catch (error) {
@@ -185,8 +185,8 @@ export async function addLegacyTutor(user: User, tutor: Tutor & { user_id?: stri
 }
 
 export async function rejectTutorApplication(id: string): Promise<void> {
-  const query = 'DELETE FROM tutor_applications WHERE id = ?';
-  await pool.execute(query, [id]);
+  const query = 'UPDATE tutor_applications SET status = ? WHERE id = ?';
+  await pool.execute(query, ['Rejected', id]);
 }
 
 export async function updateParentRequestStatus(id: string, status: string): Promise<void> {

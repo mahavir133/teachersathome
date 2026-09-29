@@ -16,6 +16,8 @@ export function AdminDashboard() {
   const [grievances, setGrievances] = useState<any[]>([]);
   const [allAssignments, setAllAssignments] = useState<any[]>([]);
   const [selectedRectifyAssignment, setSelectedRectifyAssignment] = useState<string>('');
+  const [requestsFilter, setRequestsFilter] = useState<string>('All');
+  const [applicationsFilter, setApplicationsFilter] = useState<string>('All');
   const [loading, setLoading] = useState(false);
 
   const fetchAdminData = async () => {
@@ -197,14 +199,29 @@ export function AdminDashboard() {
           <div className="text-center py-16 text-slate-500">Loading operational logs...</div>
         ) : activeTab === 'requests' ? (
           /* Parent Demo Requests List */
-          requests.length === 0 ? (
+          <div className="space-y-4">
+            <div className="flex justify-between items-center mb-4 border-b border-slate-200 pb-2">
+              <h3 className="font-bold text-slate-700">Demo Requests</h3>
+              <select 
+                value={requestsFilter}
+                onChange={(e) => setRequestsFilter(e.target.value)}
+                className="text-sm font-medium border border-slate-300 rounded px-3 py-1.5"
+              >
+                <option value="All">All Requests</option>
+                <option value="Pending">Pending</option>
+                <option value="Demo Scheduled">Demo Scheduled</option>
+                <option value="Completed">Completed</option>
+                <option value="Rejected">Rejected</option>
+              </select>
+            </div>
+          {requests.length === 0 ? (
             <div className="text-center py-16 text-slate-500 text-sm">
               <Clock className="w-12 h-12 text-slate-300 mx-auto mb-3" />
               <p className="font-bold">No demo requests received yet</p>
             </div>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {requests.map((req) => (
+              {requests.filter(req => requestsFilter === 'All' || req.status === requestsFilter).map((req) => (
                 <div key={req.id} className="bg-white rounded-xl p-5 border border-slate-200 shadow-sm space-y-3">
                   <div className="flex items-center justify-between">
                     <span className="font-extrabold text-[#708238] bg-[#F2F4EF] px-2 py-1 rounded-md text-xs border border-[#E6E8E1]">
@@ -259,24 +276,43 @@ export function AdminDashboard() {
                 </div>
               ))}
             </div>
-          )
+          )}
+          </div>
         ) : activeTab === 'applications' ? (
           /* Tutor Onboarding List */
-          applications.length === 0 ? (
+          <div className="space-y-4">
+            <div className="flex justify-between items-center mb-4 border-b border-slate-200 pb-2">
+              <h3 className="font-bold text-slate-700">Tutor Applications</h3>
+              <select 
+                value={applicationsFilter}
+                onChange={(e) => setApplicationsFilter(e.target.value)}
+                className="text-sm font-medium border border-slate-300 rounded px-3 py-1.5"
+              >
+                <option value="All">All Applications</option>
+                <option value="Received">Review Needed (Received)</option>
+                <option value="Approved">Approved</option>
+                <option value="Rejected">Rejected</option>
+              </select>
+            </div>
+          {applications.length === 0 ? (
             <div className="text-center py-16 text-slate-500 text-sm">
               <ShieldCheck className="w-12 h-12 text-slate-300 mx-auto mb-3" />
               <p className="font-bold">No pending mentor registrations</p>
             </div>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {applications.map((app) => (
+              {applications.filter(app => applicationsFilter === 'All' || app.status === applicationsFilter).map((app) => (
                 <div key={app.id} className="bg-white rounded-xl p-5 border border-slate-200 shadow-sm space-y-4">
                   <div className="flex items-center justify-between">
                     <span className="font-extrabold text-indigo-600 bg-indigo-50 px-2 py-1 rounded-md text-xs border border-indigo-100">
                       {app.id}
                     </span>
-                    <span className="text-[10px] font-bold uppercase px-2 py-1 rounded-full bg-amber-100 text-amber-800">
-                      Review Needed
+                    <span className={`text-[10px] font-bold uppercase px-2 py-1 rounded-full ${
+                      app.status === 'Approved' ? 'bg-emerald-100 text-emerald-800' :
+                      app.status === 'Rejected' ? 'bg-red-100 text-red-800' :
+                      'bg-amber-100 text-amber-800'
+                    }`}>
+                      {app.status === 'Received' ? 'Review Needed' : app.status}
                     </span>
                   </div>
 
@@ -301,23 +337,28 @@ export function AdminDashboard() {
                     >
                       <Phone className="w-5 h-5" />
                     </a>
-                    <button
-                      onClick={() => handleRejectTutor(app.id)}
-                      className="flex-1 py-2 bg-red-50 hover:bg-red-100 text-red-600 border border-red-200 font-bold text-center text-sm rounded-lg transition-colors flex items-center justify-center gap-1"
-                    >
-                      <XCircle className="w-4 h-4" /> Reject
-                    </button>
-                    <button
-                      onClick={() => handleApproveTutor(app.id)}
-                      className="flex-1 py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-center text-sm rounded-lg shadow-sm transition-colors flex items-center justify-center gap-1"
-                    >
-                      <CheckCircle className="w-4 h-4" /> Approve
-                    </button>
+                    {app.status === 'Received' && (
+                      <>
+                        <button
+                          onClick={() => handleRejectTutor(app.id)}
+                          className="flex-1 py-2 bg-red-50 hover:bg-red-100 text-red-600 border border-red-200 font-bold text-center text-sm rounded-lg transition-colors flex items-center justify-center gap-1"
+                        >
+                          <XCircle className="w-4 h-4" /> Reject
+                        </button>
+                        <button
+                          onClick={() => handleApproveTutor(app.id)}
+                          className="flex-1 py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-center text-sm rounded-lg shadow-sm transition-colors flex items-center justify-center gap-1"
+                        >
+                          <CheckCircle className="w-4 h-4" /> Approve
+                        </button>
+                      </>
+                    )}
                   </div>
                 </div>
               ))}
             </div>
-          )
+          )}
+          </div>
         ) : activeTab === 'legacy' ? (
           <LegacyTutorForm />
         ) : activeTab === 'assignments' ? (
