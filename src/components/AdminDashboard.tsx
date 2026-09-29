@@ -6,11 +6,12 @@ import { AssignmentsManager } from './AssignmentsManager';
 import { FeeManager } from './FeeManager';
 import { useAuth } from '../AuthContext';
 import { AttendanceCalendar } from './AttendanceCalendar';
-import { AlertTriangle, Calendar } from 'lucide-react';
+import { AlertTriangle, Calendar, Target, Activity } from 'lucide-react';
+import { AdvancedDashboard } from './AdvancedDashboard';
 
 export function AdminDashboard() {
   const { token } = useAuth();
-  const [activeTab, setActiveTab] = useState<'requests' | 'applications' | 'legacy' | 'assignments' | 'fees' | 'grievances' | 'rectification'>('requests');
+  const [activeTab, setActiveTab] = useState<'overview' | 'requests' | 'applications' | 'legacy' | 'assignments' | 'fees' | 'grievances' | 'rectification'>('overview');
   const [requests, setRequests] = useState<ParentRequest[]>([]);
   const [applications, setApplications] = useState<any[]>([]);
   const [grievances, setGrievances] = useState<any[]>([]);
@@ -128,7 +129,17 @@ export function AdminDashboard() {
       </div>
 
       {/* Tabs */}
-      <div className="flex bg-white rounded-lg shadow-sm border border-slate-200 overflow-hidden text-sm font-bold">
+      <div className="flex bg-white rounded-lg shadow-sm border border-slate-200 overflow-hidden text-sm font-bold flex-wrap">
+        <button
+          onClick={() => setActiveTab('overview')}
+          className={`flex-1 min-w-[120px] py-3 text-center border-b-2 transition-colors ${
+            activeTab === 'overview'
+              ? 'border-indigo-600 text-indigo-700 bg-indigo-50'
+              : 'border-transparent text-slate-500 hover:text-slate-700 hover:bg-slate-50'
+          }`}
+        >
+          Overview
+        </button>
         <button
           onClick={() => setActiveTab('requests')}
           className={`flex-1 py-3 text-center border-b-2 transition-colors ${
@@ -205,6 +216,8 @@ export function AdminDashboard() {
       <div className="bg-slate-50 border border-slate-200 rounded-xl p-4 min-h-[400px]">
         {loading ? (
           <div className="text-center py-16 text-slate-500">Loading operational logs...</div>
+        ) : activeTab === 'overview' ? (
+          <AdvancedDashboard />
         ) : activeTab === 'requests' ? (
           /* Parent Demo Requests List */
           <div className="space-y-4">
