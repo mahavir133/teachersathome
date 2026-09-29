@@ -117,6 +117,14 @@ export function AdminDashboard() {
           </div>
           <p className="text-xs text-[#E9EDDE] font-medium mt-1">Manage tuition operations & onboard verified mentors</p>
         </div>
+        <a 
+          href="/admin.html" 
+          target="_blank" 
+          rel="noopener noreferrer"
+          className="bg-amber-500 hover:bg-amber-600 text-white font-bold py-2 px-4 rounded-lg flex items-center gap-2 transition-colors text-sm shadow-sm"
+        >
+          Open Advanced Dashboard ↗
+        </a>
       </div>
 
       {/* Tabs */}
