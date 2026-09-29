@@ -5,7 +5,7 @@ import {
   Banknote, Target, Bell
 } from 'lucide-react';
 
-export function AdvancedDashboard() {
+export function AdvancedDashboard({ onNavigate }: { onNavigate?: (tab: any, filter?: string) => void }) {
   const { token } = useAuth();
   const [data, setData] = useState<any>(null);
   const [loading, setLoading] = useState(true);
@@ -57,21 +57,25 @@ export function AdvancedDashboard() {
   const { tutors, requests, applications, assignments, payments, grievances } = data;
 
   const metrics = [
-    { label: 'Total Tutors', value: tutors.length, icon: Users, color: 'text-blue-600', bg: 'bg-blue-50' },
-    { label: 'Verified Tutors', value: tutors.filter((t: any) => t.verified).length, icon: CheckCircle, color: 'text-emerald-600', bg: 'bg-emerald-50' },
-    { label: 'Pending Apps', value: applications.filter((a: any) => a.status === 'Pending').length, icon: FileText, color: 'text-amber-600', bg: 'bg-amber-50' },
-    { label: 'Parent Requests', value: requests.length, icon: ClipboardList, color: 'text-purple-600', bg: 'bg-purple-50' },
-    { label: 'Unassigned', value: requests.filter((r: any) => !assignments.some((a: any) => a.request_id === r.id)).length, icon: AlertCircle, color: 'text-rose-600', bg: 'bg-rose-50' },
-    { label: 'Active Assignments', value: assignments.filter((a: any) => a.status === 'Active').length, icon: Target, color: 'text-indigo-600', bg: 'bg-indigo-50' },
-    { label: 'Fees Collected (₹)', value: payments.filter((p: any) => p.status === 'Paid').reduce((s: number, p: any) => s + Number(p.amount), 0).toLocaleString('en-IN'), icon: Banknote, color: 'text-teal-600', bg: 'bg-teal-50' },
-    { label: 'Open Grievances', value: grievances.filter((g: any) => g.status !== 'Resolved').length, icon: Bell, color: 'text-red-600', bg: 'bg-red-50' },
+    { label: 'Total Tutors', value: tutors.length, icon: Users, color: 'text-blue-600', bg: 'bg-blue-50', nav: ['applications', 'Approved'] },
+    { label: 'Verified Tutors', value: tutors.filter((t: any) => t.verified).length, icon: CheckCircle, color: 'text-emerald-600', bg: 'bg-emerald-50', nav: ['applications', 'Approved'] },
+    { label: 'Pending Apps', value: applications.filter((a: any) => a.status === 'Received').length, icon: FileText, color: 'text-amber-600', bg: 'bg-amber-50', nav: ['applications', 'Received'] },
+    { label: 'Parent Requests', value: requests.length, icon: ClipboardList, color: 'text-purple-600', bg: 'bg-purple-50', nav: ['requests', 'All'] },
+    { label: 'Unassigned', value: requests.filter((r: any) => !assignments.some((a: any) => a.request_id === r.id)).length, icon: AlertCircle, color: 'text-rose-600', bg: 'bg-rose-50', nav: ['requests', 'All'] },
+    { label: 'Active Assignments', value: assignments.filter((a: any) => a.status === 'Active').length, icon: Target, color: 'text-indigo-600', bg: 'bg-indigo-50', nav: ['assignments'] },
+    { label: 'Fees Collected (₹)', value: payments.filter((p: any) => p.status === 'Paid').reduce((s: number, p: any) => s + Number(p.amount), 0).toLocaleString('en-IN'), icon: Banknote, color: 'text-teal-600', bg: 'bg-teal-50', nav: ['fees'] },
+    { label: 'Open Grievances', value: grievances.filter((g: any) => g.status !== 'Resolved').length, icon: Bell, color: 'text-red-600', bg: 'bg-red-50', nav: ['grievances'] },
   ];
 
   return (
     <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         {metrics.map((m, i) => (
-          <div key={i} className="bg-white p-5 rounded-xl border border-slate-200 shadow-sm hover:shadow-md transition-shadow">
+          <div 
+            key={i} 
+            onClick={() => onNavigate && onNavigate(m.nav[0], m.nav[1])}
+            className={`bg-white p-5 rounded-xl border border-slate-200 shadow-sm hover:shadow-md transition-all ${onNavigate ? 'cursor-pointer hover:-translate-y-1' : ''}`}
+          >
             <div className="flex items-center justify-between mb-4">
               <span className="text-sm font-semibold text-slate-600">{m.label}</span>
               <div className={`p-2 rounded-lg ${m.bg}`}>
@@ -112,8 +116,12 @@ export function AdvancedDashboard() {
             <h3 className="font-bold text-slate-800">Needs Attention</h3>
           </div>
           <div className="divide-y divide-slate-100">
-            {applications.filter((a: any) => a.status === 'Pending').slice(0, 3).map((a: any, i: number) => (
-              <div key={i} className="px-6 py-4 hover:bg-slate-50 flex items-start gap-3">
+            {applications.filter((a: any) => a.status === 'Received').slice(0, 3).map((a: any, i: number) => (
+              <div 
+                key={i} 
+                onClick={() => onNavigate && onNavigate('applications', 'Received')}
+                className="px-6 py-4 hover:bg-slate-50 flex items-start gap-3 cursor-pointer"
+              >
                 <div className="p-2 bg-amber-50 text-amber-600 rounded-lg shrink-0 mt-0.5">
                   <FileText className="w-4 h-4" />
                 </div>
@@ -124,7 +132,11 @@ export function AdvancedDashboard() {
               </div>
             ))}
             {grievances.filter((g: any) => g.status !== 'Resolved').slice(0, 3).map((g: any, i: number) => (
-              <div key={`g${i}`} className="px-6 py-4 hover:bg-slate-50 flex items-start gap-3">
+              <div 
+                key={`g${i}`} 
+                onClick={() => onNavigate && onNavigate('grievances')}
+                className="px-6 py-4 hover:bg-slate-50 flex items-start gap-3 cursor-pointer"
+              >
                 <div className="p-2 bg-red-50 text-red-600 rounded-lg shrink-0 mt-0.5">
                   <Bell className="w-4 h-4" />
                 </div>
@@ -134,7 +146,7 @@ export function AdvancedDashboard() {
                 </div>
               </div>
             ))}
-            {applications.filter((a: any) => a.status === 'Pending').length === 0 && 
+            {applications.filter((a: any) => a.status === 'Received').length === 0 && 
              grievances.filter((g: any) => g.status !== 'Resolved').length === 0 && (
               <div className="p-6 text-center text-emerald-600 flex flex-col items-center justify-center gap-2">
                 <CheckCircle className="w-8 h-8 opacity-50" />

@@ -14,6 +14,7 @@ export function AdminDashboard() {
   const [activeTab, setActiveTab] = useState<'overview' | 'requests' | 'applications' | 'legacy' | 'assignments' | 'fees' | 'grievances' | 'rectification'>('overview');
   const [requests, setRequests] = useState<ParentRequest[]>([]);
   const [applications, setApplications] = useState<any[]>([]);
+  const [tutors, setTutors] = useState<any[]>([]);
   const [grievances, setGrievances] = useState<any[]>([]);
   const [allAssignments, setAllAssignments] = useState<any[]>([]);
   const [selectedRectifyAssignment, setSelectedRectifyAssignment] = useState<string>('');
@@ -24,10 +25,14 @@ export function AdminDashboard() {
   const fetchAdminData = async () => {
     setLoading(true);
     try {
-      const res = await fetch('/api/requests');
+      const [res, tutRes] = await Promise.all([
+        fetch('/api/requests'),
+        fetch('/api/tutors')
+      ]);
       const data = await res.json();
       setRequests(data.parentRequests || []);
       setApplications(data.tutorApplications || []);
+      setTutors(await tutRes.json() || []);
 
       if (token) {
         const resGrv = await fetch('/api/grievances', { headers: { 'Authorization': `Bearer ${token}` } });
@@ -118,14 +123,6 @@ export function AdminDashboard() {
           </div>
           <p className="text-xs text-[#E9EDDE] font-medium mt-1">Manage tuition operations & onboard verified mentors</p>
         </div>
-        <a 
-          href="/admin.html" 
-          target="_blank" 
-          rel="noopener noreferrer"
-          className="bg-amber-500 hover:bg-amber-600 text-white font-bold py-2 px-4 rounded-lg flex items-center gap-2 transition-colors text-sm shadow-sm"
-        >
-          Open Advanced Dashboard ↗
-        </a>
       </div>
 
       {/* Tabs */}
@@ -217,7 +214,13 @@ export function AdminDashboard() {
         {loading ? (
           <div className="text-center py-16 text-slate-500">Loading operational logs...</div>
         ) : activeTab === 'overview' ? (
-          <AdvancedDashboard />
+          <AdvancedDashboard 
+            onNavigate={(tab, filter) => {
+              setActiveTab(tab);
+              if (tab === 'requests' && filter) setRequestsFilter(filter);
+              if (tab === 'applications' && filter) setApplicationsFilter(filter);
+            }} 
+          />
         ) : activeTab === 'requests' ? (
           /* Parent Demo Requests List */
           <div className="space-y-4">
@@ -315,68 +318,93 @@ export function AdminDashboard() {
                 <option value="Rejected">Rejected</option>
               </select>
             </div>
-          {applications.length === 0 ? (
+          {applications.length === 0 && (applicationsFilter !== 'Approved' || tutors.length === 0) ? (
             <div className="text-center py-16 text-slate-500 text-sm">
               <ShieldCheck className="w-12 h-12 text-slate-300 mx-auto mb-3" />
-              <p className="font-bold">No pending mentor registrations</p>
+              <p className="font-bold">No applications or tutors match the criteria</p>
             </div>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {applications.filter(app => applicationsFilter === 'All' || app.status === applicationsFilter).map((app) => (
-                <div key={app.id} className="bg-white rounded-xl p-5 border border-slate-200 shadow-sm space-y-4">
-                  <div className="flex items-center justify-between">
-                    <span className="font-extrabold text-indigo-600 bg-indigo-50 px-2 py-1 rounded-md text-xs border border-indigo-100">
-                      {app.id}
-                    </span>
-                    <span className={`text-[10px] font-bold uppercase px-2 py-1 rounded-full ${
-                      app.status === 'Approved' ? 'bg-emerald-100 text-emerald-800' :
-                      app.status === 'Rejected' ? 'bg-red-100 text-red-800' :
-                      'bg-amber-100 text-amber-800'
-                    }`}>
-                      {app.status === 'Received' ? 'Review Needed' : app.status}
-                    </span>
-                  </div>
+              {applicationsFilter === 'Approved' ? (
+                tutors.filter(t => t.verified).map((tutor) => (
+                  <div key={tutor.id} className="bg-white rounded-xl p-5 border border-emerald-200 shadow-sm space-y-4 opacity-90 border-l-4 border-l-emerald-500">
+                    <div className="flex items-center justify-between">
+                      <span className="font-extrabold text-indigo-600 bg-indigo-50 px-2 py-1 rounded-md text-xs border border-indigo-100">
+                        {tutor.id}
+                      </span>
+                      <span className="text-[10px] font-bold uppercase px-2 py-1 rounded-full bg-emerald-100 text-emerald-800 flex items-center gap-1">
+                        <CheckCircle className="w-3 h-3" /> Verified Tutor
+                      </span>
+                    </div>
 
-                  <div>
-                    <h4 className="font-extrabold text-lg text-slate-900">{app.fullName}</h4>
-                    <p className="text-slate-600 text-sm font-medium">{app.qualification} ({app.experienceYears} Yrs Exp)</p>
-                  </div>
+                    <div>
+                      <h4 className="font-extrabold text-lg text-slate-900">{tutor.name}</h4>
+                      <p className="text-slate-600 text-sm font-medium">{tutor.qualification} ({tutor.experienceYears} Yrs Exp)</p>
+                    </div>
 
-                  <div className="text-slate-600 text-sm space-y-1 bg-slate-50 p-3 rounded-lg border border-slate-100">
-                    <div><strong>Email:</strong> {app.email}</div>
-                    <div><strong>Teaching:</strong> {app.subjects?.join(', ')}</div>
-                    <div><strong>Boards:</strong> {app.boards?.join(', ')}</div>
-                    <div><strong>Cities:</strong> {app.cities?.join(', ')}</div>
-                    <div className="text-slate-500 mt-2 italic text-xs">"{app.bio}"</div>
+                    <div className="text-slate-600 text-sm space-y-1 bg-slate-50 p-3 rounded-lg border border-slate-100">
+                      <div><strong>Teaching:</strong> {typeof tutor.subjects === 'string' ? JSON.parse(tutor.subjects || '[]').join(', ') : (tutor.subjects || []).join(', ')}</div>
+                      <div><strong>Cities:</strong> {typeof tutor.cities === 'string' ? JSON.parse(tutor.cities || '[]').join(', ') : (tutor.cities || []).join(', ')}</div>
+                    </div>
                   </div>
+                ))
+              ) : (
+                applications.filter(app => applicationsFilter === 'All' || app.status === applicationsFilter).map((app) => (
+                  <div key={app.id} className="bg-white rounded-xl p-5 border border-slate-200 shadow-sm space-y-4">
+                    <div className="flex items-center justify-between">
+                      <span className="font-extrabold text-indigo-600 bg-indigo-50 px-2 py-1 rounded-md text-xs border border-indigo-100">
+                        {app.id}
+                      </span>
+                      <span className={`text-[10px] font-bold uppercase px-2 py-1 rounded-full ${
+                        app.status === 'Approved' ? 'bg-emerald-100 text-emerald-800' :
+                        app.status === 'Rejected' ? 'bg-red-100 text-red-800' :
+                        'bg-amber-100 text-amber-800'
+                      }`}>
+                        {app.status === 'Received' ? 'Review Needed' : app.status}
+                      </span>
+                    </div>
 
-                  <div className="flex items-center gap-2">
-                    <a
-                      href={`tel:${app.phone}`}
-                      className="p-2 border border-slate-300 hover:bg-slate-50 rounded-lg text-slate-700"
-                      title="Call Tutor"
-                    >
-                      <Phone className="w-5 h-5" />
-                    </a>
-                    {app.status === 'Received' && (
-                      <>
-                        <button
-                          onClick={() => handleRejectTutor(app.id)}
-                          className="flex-1 py-2 bg-red-50 hover:bg-red-100 text-red-600 border border-red-200 font-bold text-center text-sm rounded-lg transition-colors flex items-center justify-center gap-1"
-                        >
-                          <XCircle className="w-4 h-4" /> Reject
-                        </button>
-                        <button
-                          onClick={() => handleApproveTutor(app.id)}
-                          className="flex-1 py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-center text-sm rounded-lg shadow-sm transition-colors flex items-center justify-center gap-1"
-                        >
-                          <CheckCircle className="w-4 h-4" /> Approve
-                        </button>
-                      </>
-                    )}
+                    <div>
+                      <h4 className="font-extrabold text-lg text-slate-900">{app.fullName}</h4>
+                      <p className="text-slate-600 text-sm font-medium">{app.qualification} ({app.experienceYears} Yrs Exp)</p>
+                    </div>
+
+                    <div className="text-slate-600 text-sm space-y-1 bg-slate-50 p-3 rounded-lg border border-slate-100">
+                      <div><strong>Email:</strong> {app.email}</div>
+                      <div><strong>Teaching:</strong> {app.subjects?.join(', ')}</div>
+                      <div><strong>Boards:</strong> {app.boards?.join(', ')}</div>
+                      <div><strong>Cities:</strong> {app.cities?.join(', ')}</div>
+                      <div className="text-slate-500 mt-2 italic text-xs">"{app.bio}"</div>
+                    </div>
+
+                    <div className="flex items-center gap-2">
+                      <a
+                        href={`tel:${app.phone}`}
+                        className="p-2 border border-slate-300 hover:bg-slate-50 rounded-lg text-slate-700"
+                        title="Call Tutor"
+                      >
+                        <Phone className="w-5 h-5" />
+                      </a>
+                      {app.status === 'Received' && (
+                        <>
+                          <button
+                            onClick={() => handleRejectTutor(app.id)}
+                            className="flex-1 py-2 bg-red-50 hover:bg-red-100 text-red-600 border border-red-200 font-bold text-center text-sm rounded-lg transition-colors flex items-center justify-center gap-1"
+                          >
+                            <XCircle className="w-4 h-4" /> Reject
+                          </button>
+                          <button
+                            onClick={() => handleApproveTutor(app.id)}
+                            className="flex-1 py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-center text-sm rounded-lg shadow-sm transition-colors flex items-center justify-center gap-1"
+                          >
+                            <CheckCircle className="w-4 h-4" /> Approve
+                          </button>
+                        </>
+                      )}
+                    </div>
                   </div>
-                </div>
-              ))}
+                ))
+              )}
             </div>
           )}
           </div>
