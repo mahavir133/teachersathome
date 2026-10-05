@@ -58,9 +58,8 @@ export function AdvancedDashboard({ onNavigate }: { onNavigate?: (tab: any, filt
 
   const metrics = [
     { label: 'Total Tutors', value: tutors.length, icon: Users, color: 'text-blue-600', bg: 'bg-blue-50', nav: ['applications', 'Approved'] },
-    { label: 'Verified Tutors', value: tutors.filter((t: any) => t.verified).length, icon: CheckCircle, color: 'text-emerald-600', bg: 'bg-emerald-50', nav: ['applications', 'Approved'] },
+    { label: 'Approved Tutors', value: tutors.filter((t: any) => t.verified).length, icon: CheckCircle, color: 'text-emerald-600', bg: 'bg-emerald-50', nav: ['applications', 'Approved'] },
     { label: 'Pending Apps', value: applications.filter((a: any) => a.status === 'Received').length, icon: FileText, color: 'text-amber-600', bg: 'bg-amber-50', nav: ['applications', 'Received'] },
-    { label: 'Approved Apps', value: applications.filter((a: any) => a.status === 'Approved').length, icon: CheckCircle, color: 'text-teal-600', bg: 'bg-teal-50', nav: ['applications', 'Approved'] },
     { label: 'Parent Requests', value: requests.length, icon: ClipboardList, color: 'text-purple-600', bg: 'bg-purple-50', nav: ['requests', 'All'] },
     { label: 'Unassigned', value: requests.filter((r: any) => !assignments.some((a: any) => a.request_id === r.id)).length, icon: AlertCircle, color: 'text-rose-600', bg: 'bg-rose-50', nav: ['requests', 'All'] },
     { label: 'Active Assignments', value: assignments.filter((a: any) => a.status === 'Active').length, icon: Target, color: 'text-indigo-600', bg: 'bg-indigo-50', nav: ['assignments'] },
