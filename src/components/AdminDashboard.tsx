@@ -22,6 +22,13 @@ export function AdminDashboard() {
   const [applicationsFilter, setApplicationsFilter] = useState<string>('All');
   const [loading, setLoading] = useState(false);
 
+  const [tutorSearch, setTutorSearch] = useState('');
+  const [tutorSubject, setTutorSubject] = useState('');
+  const [tutorCity, setTutorCity] = useState('');
+  const [tutorQual, setTutorQual] = useState('');
+  const [tutorMinExp, setTutorMinExp] = useState('');
+  const [selectedProfile, setSelectedProfile] = useState<any>(null);
+
   const fetchAdminData = async () => {
     setLoading(true);
     try {
@@ -155,7 +162,7 @@ export function AdminDashboard() {
               : 'border-transparent text-slate-500 hover:text-slate-700 hover:bg-slate-50'
           }`}
         >
-          Tutor Onboarding ({applications.length})
+          Tutor Onboarding ({applications.length + tutors.filter(t => t.verified).length})
         </button>
         <button
           onClick={() => setActiveTab('legacy')}
@@ -305,18 +312,25 @@ export function AdminDashboard() {
         ) : activeTab === 'applications' ? (
           /* Tutor Onboarding List */
           <div className="space-y-4">
-            <div className="flex justify-between items-center mb-4 border-b border-slate-200 pb-2">
+            <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-4 border-b border-slate-200 pb-2 gap-4">
               <h3 className="font-bold text-slate-700">Tutor Applications</h3>
-              <select 
-                value={applicationsFilter}
-                onChange={(e) => setApplicationsFilter(e.target.value)}
-                className="text-sm font-medium border border-slate-300 rounded px-3 py-1.5"
-              >
-                <option value="All">All Applications</option>
-                <option value="Received">Review Needed (Received)</option>
-                <option value="Approved">Approved</option>
-                <option value="Rejected">Rejected</option>
-              </select>
+              <div className="flex flex-wrap gap-2">
+                <input type="text" placeholder="Search Name..." value={tutorSearch} onChange={e => setTutorSearch(e.target.value)} className="text-sm border border-slate-300 rounded px-2 py-1.5" />
+                <input type="text" placeholder="Subject..." value={tutorSubject} onChange={e => setTutorSubject(e.target.value)} className="text-sm border border-slate-300 rounded px-2 py-1.5 w-24" />
+                <input type="text" placeholder="City..." value={tutorCity} onChange={e => setTutorCity(e.target.value)} className="text-sm border border-slate-300 rounded px-2 py-1.5 w-24" />
+                <input type="text" placeholder="Qual..." value={tutorQual} onChange={e => setTutorQual(e.target.value)} className="text-sm border border-slate-300 rounded px-2 py-1.5 w-24" />
+                <input type="number" placeholder="Min Exp" value={tutorMinExp} onChange={e => setTutorMinExp(e.target.value)} className="text-sm border border-slate-300 rounded px-2 py-1.5 w-24" />
+                <select 
+                  value={applicationsFilter}
+                  onChange={(e) => setApplicationsFilter(e.target.value)}
+                  className="text-sm font-medium border border-slate-300 rounded px-3 py-1.5"
+                >
+                  <option value="All">All Applications</option>
+                  <option value="Received">Review Needed (Received)</option>
+                  <option value="Approved">Approved</option>
+                  <option value="Rejected">Rejected</option>
+                </select>
+              </div>
             </div>
           {applications.length === 0 && (applicationsFilter !== 'Approved' || tutors.length === 0) ? (
             <div className="text-center py-16 text-slate-500 text-sm">
@@ -326,7 +340,19 @@ export function AdminDashboard() {
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
               {applicationsFilter === 'Approved' ? (
-                tutors.filter(t => t.verified).map((tutor) => (
+                tutors.filter(t => t.verified)
+                .filter(t => !tutorSearch || t.name?.toLowerCase().includes(tutorSearch.toLowerCase()))
+                .filter(t => {
+                  const subjs = typeof t.subjects === 'string' ? JSON.parse(t.subjects || '[]') : (t.subjects || []);
+                  return !tutorSubject || subjs.some((s: string) => s.toLowerCase().includes(tutorSubject.toLowerCase()));
+                })
+                .filter(t => {
+                  const cities = typeof t.cities === 'string' ? JSON.parse(t.cities || '[]') : (t.cities || []);
+                  return !tutorCity || cities.some((c: string) => c.toLowerCase().includes(tutorCity.toLowerCase()));
+                })
+                .filter(t => !tutorQual || t.qualification?.toLowerCase().includes(tutorQual.toLowerCase()))
+                .filter(t => !tutorMinExp || t.experienceYears >= parseInt(tutorMinExp))
+                .map((tutor) => (
                   <div key={tutor.id} className="bg-white rounded-xl p-5 border border-emerald-200 shadow-sm space-y-4 opacity-90 border-l-4 border-l-emerald-500">
                     <div className="flex items-center justify-between">
                       <span className="font-extrabold text-indigo-600 bg-indigo-50 px-2 py-1 rounded-md text-xs border border-indigo-100">
@@ -346,10 +372,23 @@ export function AdminDashboard() {
                       <div><strong>Teaching:</strong> {typeof tutor.subjects === 'string' ? JSON.parse(tutor.subjects || '[]').join(', ') : (tutor.subjects || []).join(', ')}</div>
                       <div><strong>Cities:</strong> {typeof tutor.cities === 'string' ? JSON.parse(tutor.cities || '[]').join(', ') : (tutor.cities || []).join(', ')}</div>
                     </div>
+
+                    <button
+                      onClick={() => setSelectedProfile({ ...tutor, isTutor: true })}
+                      className="w-full py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-center text-sm rounded-lg transition-colors"
+                    >
+                      View Profile
+                    </button>
                   </div>
                 ))
               ) : (
-                applications.filter(app => applicationsFilter === 'All' || app.status === applicationsFilter).map((app) => (
+                applications.filter(app => applicationsFilter === 'All' || app.status === applicationsFilter)
+                .filter(app => !tutorSearch || app.fullName?.toLowerCase().includes(tutorSearch.toLowerCase()))
+                .filter(app => !tutorSubject || app.subjects?.some((s: string) => s.toLowerCase().includes(tutorSubject.toLowerCase())))
+                .filter(app => !tutorCity || app.cities?.some((c: string) => c.toLowerCase().includes(tutorCity.toLowerCase())))
+                .filter(app => !tutorQual || app.qualification?.toLowerCase().includes(tutorQual.toLowerCase()))
+                .filter(app => !tutorMinExp || app.experienceYears >= parseInt(tutorMinExp))
+                .map((app) => (
                   <div key={app.id} className="bg-white rounded-xl p-5 border border-slate-200 shadow-sm space-y-4">
                     <div className="flex items-center justify-between">
                       <span className="font-extrabold text-indigo-600 bg-indigo-50 px-2 py-1 rounded-md text-xs border border-indigo-100">
@@ -378,6 +417,12 @@ export function AdminDashboard() {
                     </div>
 
                     <div className="flex items-center gap-2">
+                      <button
+                        onClick={() => setSelectedProfile({ ...app, isTutor: false })}
+                        className="flex-1 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-center text-sm rounded-lg transition-colors"
+                      >
+                        Profile
+                      </button>
                       <a
                         href={`tel:${app.phone}`}
                         className="p-2 border border-slate-300 hover:bg-slate-50 rounded-lg text-slate-700"
@@ -503,6 +548,57 @@ export function AdminDashboard() {
           </div>
         ) : null}
       </div>
+
+      {selectedProfile && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-xl max-w-2xl w-full p-6 relative max-h-[90vh] overflow-y-auto">
+            <button 
+              onClick={() => setSelectedProfile(null)}
+              className="absolute top-4 right-4 text-slate-400 hover:text-slate-600"
+            >
+              <XCircle className="w-6 h-6" />
+            </button>
+            <h2 className="text-2xl font-extrabold text-slate-900 mb-2">
+              {selectedProfile.isTutor ? selectedProfile.name : selectedProfile.fullName}
+            </h2>
+            <div className="flex flex-wrap gap-2 mb-6">
+              <span className="bg-indigo-100 text-indigo-800 text-xs font-bold px-2 py-1 rounded">
+                {selectedProfile.qualification}
+              </span>
+              <span className="bg-amber-100 text-amber-800 text-xs font-bold px-2 py-1 rounded">
+                {selectedProfile.experienceYears} Years Experience
+              </span>
+            </div>
+            
+            <div className="space-y-4 text-sm text-slate-700">
+              <div className="grid grid-cols-2 gap-4">
+                <div className="bg-slate-50 p-3 rounded-lg border border-slate-100">
+                  <strong className="block text-slate-900 mb-1">Contact</strong>
+                  <div>Email: {selectedProfile.email || 'N/A'}</div>
+                  <div>Phone: {selectedProfile.phone || 'N/A'}</div>
+                </div>
+                <div className="bg-slate-50 p-3 rounded-lg border border-slate-100">
+                  <strong className="block text-slate-900 mb-1">Location</strong>
+                  <div>Cities: {(selectedProfile.isTutor && typeof selectedProfile.cities === 'string') ? JSON.parse(selectedProfile.cities || '[]').join(', ') : (selectedProfile.cities || []).join(', ')}</div>
+                </div>
+              </div>
+
+              <div className="bg-slate-50 p-3 rounded-lg border border-slate-100">
+                <strong className="block text-slate-900 mb-1">Subjects & Boards</strong>
+                <div>Subjects: {(selectedProfile.isTutor && typeof selectedProfile.subjects === 'string') ? JSON.parse(selectedProfile.subjects || '[]').join(', ') : (selectedProfile.subjects || []).join(', ')}</div>
+                {!selectedProfile.isTutor && (
+                  <div>Boards: {selectedProfile.boards?.join(', ')}</div>
+                )}
+              </div>
+
+              <div className="bg-slate-50 p-3 rounded-lg border border-slate-100">
+                <strong className="block text-slate-900 mb-1">Bio / About</strong>
+                <p className="italic text-slate-600">{selectedProfile.bio || 'No bio provided.'}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
