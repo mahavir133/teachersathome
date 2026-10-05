@@ -162,7 +162,7 @@ export function AdminDashboard() {
               : 'border-transparent text-slate-500 hover:text-slate-700 hover:bg-slate-50'
           }`}
         >
-          Tutor Onboarding ({applications.length + tutors.filter(t => t.verified).length})
+          Tutor Onboarding ({applicationsFilter === 'Approved' ? tutors.filter(t => t.verified).length : applications.filter(app => applicationsFilter === 'All' || app.status === applicationsFilter).length})
         </button>
         <button
           onClick={() => setActiveTab('legacy')}
