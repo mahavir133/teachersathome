@@ -96,7 +96,7 @@ export const Header: React.FC<HeaderProps> = ({
               <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
               <span className="relative inline-flex rounded-full h-2 w-2 bg-red-600"></span>
             </span>
-            <span>Admissions 2027-28</span>
+            <span>School Admissions 2027-28</span>
           </button>
           <button 
             onClick={() => scrollTo('tutors')} 
