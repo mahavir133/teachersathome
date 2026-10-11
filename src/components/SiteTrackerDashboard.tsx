@@ -60,8 +60,52 @@ export function SiteTrackerDashboard() {
 
       const res = await fetch('/api/admin/site-tracker', { headers });
       if (res.ok) {
-        const data = await res.json();
-        setStats(data);
+        const raw = await res.json();
+        const summary = raw.summary || raw;
+        
+        // Map devices array [{device, count}] to deviceBreakdown object
+        const deviceMap: { mobile: number; desktop: number; tablet: number } = { mobile: 0, desktop: 0, tablet: 0 };
+        if (Array.isArray(raw.devices)) {
+          raw.devices.forEach((d: any) => {
+            const dev = String(d.device || '').toLowerCase();
+            if (dev.includes('mob')) deviceMap.mobile += Number(d.count || 0);
+            else if (dev.includes('tab')) deviceMap.tablet += Number(d.count || 0);
+            else deviceMap.desktop += Number(d.count || 0);
+          });
+        } else if (raw.deviceBreakdown) {
+          deviceMap.mobile = raw.deviceBreakdown.mobile || 0;
+          deviceMap.desktop = raw.deviceBreakdown.desktop || 0;
+          deviceMap.tablet = raw.deviceBreakdown.tablet || 0;
+        }
+
+        // Map eventsBreakdown array to eventBreakdown dictionary
+        const evtMap: { [key: string]: number } = {};
+        if (Array.isArray(raw.eventsBreakdown)) {
+          raw.eventsBreakdown.forEach((e: any) => {
+            evtMap[e.type] = Number(e.count || 0);
+          });
+        } else if (raw.eventBreakdown) {
+          Object.assign(evtMap, raw.eventBreakdown);
+        }
+
+        // Map topSchools
+        const schools = (raw.topSchools || []).map((s: any) => ({
+          schoolName: s.name || s.schoolName || 'Unknown School',
+          clicks: Number(s.clicks || 0)
+        }));
+
+        setStats({
+          totalPageViews: Number(summary.totalPageViews || 0),
+          todayPageViews: Number(summary.todayPageViews || 0),
+          totalUniqueVisitors: Number(summary.totalVisitors ?? summary.totalUniqueVisitors ?? 0),
+          todayUniqueVisitors: Number(summary.todayVisitors ?? summary.todayUniqueVisitors ?? 0),
+          totalSchoolClicks: Number(summary.totalSchoolClicks || 0),
+          todaySchoolClicks: Number(summary.todaySchoolClicks || 0),
+          deviceBreakdown: deviceMap,
+          eventBreakdown: evtMap,
+          topSchools: schools,
+          recentEvents: raw.recentEvents || []
+        });
       }
     } catch (err) {
       console.error('Failed to load site tracker stats', err);
