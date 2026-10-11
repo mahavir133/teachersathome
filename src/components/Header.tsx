@@ -89,6 +89,16 @@ export const Header: React.FC<HeaderProps> = ({
             Home
           </button>
           <button 
+            onClick={() => scrollTo('school-admissions')} 
+            className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-red-50 hover:bg-red-100 text-red-600 border border-red-200 transition-colors font-bold text-xs"
+          >
+            <span className="relative flex h-2 w-2">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
+              <span className="relative inline-flex rounded-full h-2 w-2 bg-red-600"></span>
+            </span>
+            <span>Admissions 2026-27</span>
+          </button>
+          <button 
             onClick={() => scrollTo('tutors')} 
             className={`hover:text-[#708238] transition-colors ${activeSection === 'tutors' ? 'text-[#708238] font-bold' : ''}`}
           >
@@ -206,6 +216,16 @@ export const Header: React.FC<HeaderProps> = ({
               className="text-left py-1.5 px-2 hover:bg-[#F2F4EF] rounded-md font-semibold"
             >
               Home
+            </button>
+            <button 
+              onClick={() => scrollTo('school-admissions')} 
+              className="text-left py-1.5 px-2 bg-red-50 text-red-600 rounded-md font-bold flex items-center justify-between"
+            >
+              <span>🏫 School Admissions 2026-27</span>
+              <span className="relative flex h-2 w-2">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
+                <span className="relative inline-flex rounded-full h-2 w-2 bg-red-600"></span>
+              </span>
             </button>
             <button 
               onClick={() => scrollTo('tutors')} 

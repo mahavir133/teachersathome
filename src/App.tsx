@@ -7,6 +7,7 @@ import { TutorDirectory } from './components/TutorDirectory';
 import { BoardCategoryGrid } from './components/BoardCategoryGrid';
 import { HowItWorks } from './components/HowItWorks';
 import { CoverageCities } from './components/CoverageCities';
+import { SchoolAdmissionsSection } from './components/SchoolAdmissionsSection';
 
 import { FAQ } from './components/FAQ';
 import { ContactSection } from './components/ContactSection';
@@ -114,6 +115,9 @@ function LandingPage() {
           onRequestDemoWithDetails={handleQuickDemoFromHeroOrCalc}
           onExploreTutors={() => scrollToSection('tutors')}
         />
+
+        {/* Ranchi School Admissions 2026-27 Portal Links & Admin Help Message Box */}
+        <SchoolAdmissionsSection />
 
         {/* Why Choose Us */}
         <WhyChooseUs />

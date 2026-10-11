@@ -1,3 +1,50 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@keyframes marquee {
+  0% { transform: translateX(0%); }
+  100% { transform: translateX(-50%); }
+}
+
+.animate-marquee {
+  display: flex;
+  width: max-content;
+  animation: marquee 35s linear infinite;
+}
+
+.animate-marquee:hover {
+  animation-play-state: paused;
+}
+
+@keyframes flashPulse {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1);
+    box-shadow: 0 0 0 0 rgba(220, 38, 38, 0.7);
+  }
+  50% {
+    opacity: 0.9;
+    transform: scale(1.02);
+    box-shadow: 0 0 0 8px rgba(220, 38, 38, 0);
+  }
+}
+
+.animate-flash-pulse {
+  animation: flashPulse 1.8s infinite;
+}
+
+@keyframes flashBadge {
+  0%, 100% {
+    background-color: #ef4444;
+    color: #ffffff;
+  }
+  50% {
+    background-color: #facc15;
+    color: #1f2937;
+  }
+}
+
+.animate-flash-badge {
+  animation: flashBadge 1.2s infinite;
+}
