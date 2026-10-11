@@ -79,3 +79,15 @@ CREATE TABLE IF NOT EXISTS grievances (
     status ENUM('Open', 'In Progress', 'Resolved') DEFAULT 'Open',
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP
 );
+
+CREATE TABLE IF NOT EXISTS admission_help_requests (
+    id VARCHAR(50) PRIMARY KEY,
+    parent_name VARCHAR(255),
+    phone VARCHAR(50) NOT NULL,
+    school_name VARCHAR(255),
+    query_message TEXT,
+    status ENUM('Pending', 'Contacted', 'In Progress', 'Resolved') DEFAULT 'Pending',
+    admin_notes TEXT,
+    user_id VARCHAR(50),
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+);

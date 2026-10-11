@@ -1,5 +1,17 @@
 import mysql from 'mysql2/promise';
-import { Tutor, ParentRequest, TutorApplication, User } from './src/types.js';
+import path from 'path';
+import { Tutor, ParentRequest, TutorApplication, User, AdmissionHelpRequest } from './src/types.js';
+
+// Load environment variables natively if available
+try {
+  // @ts-ignore
+  process.loadEnvFile(path.join(process.cwd(), '.env.local'));
+} catch {
+  try {
+    // @ts-ignore
+    process.loadEnvFile(path.join(process.cwd(), '.env'));
+  } catch { }
+}
 
 export const pool = mysql.createPool({
   host: process.env.DB_HOST || 'localhost',
@@ -19,7 +31,7 @@ export const pool = mysql.createPool({
   waitForConnections: true,
   connectionLimit: 10,
   queueLimit: 0
-});*/
+});
 
 export async function getTutors(): Promise<Tutor[]> {
   const [rows] = await pool.query('SELECT * FROM tutors ORDER BY rating DESC');
@@ -404,3 +416,55 @@ export async function linkTutorApplications(userId: string, email: string, phone
   const query = 'UPDATE tutor_applications SET user_id = ? WHERE (email = ? OR phone = ?) AND user_id IS NULL';
   await pool.execute(query, [userId, email, phone]);
 }
+
+export async function initAdmissionHelpTable(): Promise<void> {
+  const query = `
+    CREATE TABLE IF NOT EXISTS admission_help_requests (
+      id VARCHAR(50) PRIMARY KEY,
+      parent_name VARCHAR(255),
+      phone VARCHAR(50) NOT NULL,
+      school_name VARCHAR(255),
+      query_message TEXT,
+      status ENUM('Pending', 'Contacted', 'In Progress', 'Resolved') DEFAULT 'Pending',
+      admin_notes TEXT,
+      user_id VARCHAR(50),
+      created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+    )
+  `;
+  await pool.query(query);
+}
+
+export async function addAdmissionHelpRequest(data: AdmissionHelpRequest): Promise<void> {
+  await initAdmissionHelpTable();
+  const query = `
+    INSERT INTO admission_help_requests (id, parent_name, phone, school_name, query_message, status, admin_notes, user_id, created_at)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+  `;
+  const values = [
+    data.id,
+    data.parent_name || null,
+    data.phone,
+    data.school_name || null,
+    data.query_message || null,
+    data.status || 'Pending',
+    data.admin_notes || null,
+    data.user_id || null,
+    data.created_at ? new Date(data.created_at) : new Date()
+  ];
+  await pool.execute(query, values);
+}
+
+export async function getAdmissionHelpRequests(): Promise<AdmissionHelpRequest[]> {
+  await initAdmissionHelpTable();
+  const [rows] = await pool.query('SELECT * FROM admission_help_requests ORDER BY created_at DESC');
+  return rows as AdmissionHelpRequest[];
+}
+
+export async function updateAdmissionHelpRequestStatus(id: string, status: string, adminNotes?: string): Promise<void> {
+  if (adminNotes !== undefined) {
+    await pool.execute('UPDATE admission_help_requests SET status = ?, admin_notes = ? WHERE id = ?', [status, adminNotes, id]);
+  } else {
+    await pool.execute('UPDATE admission_help_requests SET status = ? WHERE id = ?', [status, id]);
+  }
+}
+

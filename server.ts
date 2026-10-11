@@ -27,7 +27,7 @@ const ai = new GoogleGenAI({
   }
 });
 
-import { pool, getTutors, getParentRequests, getTutorApplications, addParentRequest, addTutorApplication, approveTutorApplication, rejectTutorApplication, updateParentRequestStatus, getUserByEmail, createUser, getParentRequestsByUserId, getTutorApplicationByUserId, getTutorByUserId, linkParentRequests, linkTutorApplications, addLegacyTutor, getAssignments, createAssignment, getFeeCollections, addFeeCollection, getMonthlyFeeStats, updateAssignment, deleteAssignment, updateFeeCollection, deleteFeeCollection, getParentAssignmentsByUserId, getTutorAssignmentsByUserId, getParentFeeCollectionsByUserId, getTutorFeeCollectionsByUserId, getAttendanceByAssignment, markAttendance, addGrievance, getGrievancesByUserId, getAllGrievances, updateGrievanceStatus, getAllAttendance } from "./db.js";
+import { pool, getTutors, getParentRequests, getTutorApplications, addParentRequest, addTutorApplication, approveTutorApplication, rejectTutorApplication, updateParentRequestStatus, getUserByEmail, createUser, getParentRequestsByUserId, getTutorApplicationByUserId, getTutorByUserId, linkParentRequests, linkTutorApplications, addLegacyTutor, getAssignments, createAssignment, getFeeCollections, addFeeCollection, getMonthlyFeeStats, updateAssignment, deleteAssignment, updateFeeCollection, deleteFeeCollection, getParentAssignmentsByUserId, getTutorAssignmentsByUserId, getParentFeeCollectionsByUserId, getTutorFeeCollectionsByUserId, getAttendanceByAssignment, markAttendance, addGrievance, getGrievancesByUserId, getAllGrievances, updateGrievanceStatus, getAllAttendance, addAdmissionHelpRequest, getAdmissionHelpRequests, updateAdmissionHelpRequestStatus } from "./db.js";
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 
@@ -453,10 +453,78 @@ app.get("/api/requests", async (_req, res) => {
   try {
     const parentRequests = await getParentRequests();
     const tutorApplications = await getTutorApplications();
-    res.json({ parentRequests, tutorApplications });
+    const admissionHelpRequests = await getAdmissionHelpRequests();
+    res.json({ parentRequests, tutorApplications, admissionHelpRequests });
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "Failed to load requests" });
+  }
+});
+
+app.post("/api/school-admissions/help", async (req, res) => {
+  try {
+    const { parentName, phone, schoolName, message } = req.body;
+
+    if (!phone || phone.trim().length < 10) {
+      return res.status(400).json({ error: "A valid 10-digit mobile number is required." });
+    }
+
+    let userId = null;
+    const authHeader = req.headers['authorization'];
+    if (authHeader) {
+      const token = authHeader.split(' ')[1];
+      try {
+        const decoded = jwt.verify(token, JWT_SECRET) as any;
+        userId = decoded.id;
+      } catch (e) {}
+    }
+
+    const helpRequest = {
+      id: "ADM-REQ-" + Math.floor(100000 + Math.random() * 900000),
+      parent_name: parentName?.trim() || null,
+      phone: phone.trim(),
+      school_name: schoolName?.trim() || 'General School Guidance',
+      query_message: message?.trim() || null,
+      status: 'Pending' as const,
+      admin_notes: null,
+      user_id: userId,
+      created_at: new Date().toISOString()
+    };
+
+    await addAdmissionHelpRequest(helpRequest as any);
+
+    res.json({
+      success: true,
+      message: "Help request received! The portal admin of Teachers At Home will contact you shortly.",
+      data: helpRequest
+    });
+  } catch (error: any) {
+    console.error("Admission Help Request Error:", error);
+    res.status(500).json({ error: error.message || "Failed to submit admission help request" });
+  }
+});
+
+app.get("/api/school-admissions/help", async (_req, res) => {
+  try {
+    const list = await getAdmissionHelpRequests();
+    res.json(list);
+  } catch (error: any) {
+    console.error("Error loading admission help requests:", error);
+    res.status(500).json({ error: "Failed to fetch admission help requests" });
+  }
+});
+
+app.post("/api/school-admissions/help/status", async (req, res) => {
+  try {
+    const { id, status, adminNotes } = req.body;
+    if (!id || !status) {
+      return res.status(400).json({ error: "id and status are required." });
+    }
+    await updateAdmissionHelpRequestStatus(id, status, adminNotes);
+    res.json({ success: true, message: "Status updated successfully." });
+  } catch (error: any) {
+    console.error("Error updating admission help status:", error);
+    res.status(500).json({ error: "Failed to update status" });
   }
 });
 

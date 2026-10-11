@@ -174,3 +174,15 @@ export interface Grievance {
   status: 'Open' | 'In Progress' | 'Resolved';
   created_at?: string;
 }
+
+export interface AdmissionHelpRequest {
+  id: string;
+  parent_name?: string;
+  phone: string;
+  school_name?: string;
+  query_message?: string;
+  status: 'Pending' | 'Contacted' | 'In Progress' | 'Resolved';
+  admin_notes?: string;
+  user_id?: string | null;
+  created_at?: string;
+}
