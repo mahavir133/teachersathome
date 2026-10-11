@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { Clock, Phone, User, MapPin, Sparkles, ShieldCheck, Award, CheckCircle, XCircle } from 'lucide-react';
+import { Clock, Phone, User, MapPin, Sparkles, ShieldCheck, Award, CheckCircle, XCircle, School } from 'lucide-react';
 import { ParentRequest } from '../types';
 import { LegacyTutorForm } from './LegacyTutorForm';
 import { AssignmentsManager } from './AssignmentsManager';
 import { FeeManager } from './FeeManager';
+import { SchoolAdmissionsManager } from './SchoolAdmissionsManager';
 import { useAuth } from '../AuthContext';
 import { AttendanceCalendar } from './AttendanceCalendar';
 import { AlertTriangle, Calendar, Target, Activity } from 'lucide-react';
@@ -11,7 +12,7 @@ import { AdvancedDashboard } from './AdvancedDashboard';
 
 export function AdminDashboard() {
   const { token } = useAuth();
-  const [activeTab, setActiveTab] = useState<'overview' | 'requests' | 'applications' | 'legacy' | 'assignments' | 'fees' | 'grievances' | 'rectification'>('overview');
+  const [activeTab, setActiveTab] = useState<'overview' | 'requests' | 'applications' | 'admissions' | 'legacy' | 'assignments' | 'fees' | 'grievances' | 'rectification'>('overview');
   const [requests, setRequests] = useState<ParentRequest[]>([]);
   const [applications, setApplications] = useState<any[]>([]);
   const [tutors, setTutors] = useState<any[]>([]);
@@ -163,6 +164,21 @@ export function AdminDashboard() {
           }`}
         >
           Tutor Onboarding ({applicationsFilter === 'Approved' ? tutors.filter(t => t.verified).length : applications.filter(app => applicationsFilter === 'All' || app.status === applicationsFilter).length})
+        </button>
+        <button
+          onClick={() => setActiveTab('admissions')}
+          className={`flex-1 min-w-[150px] py-3 text-center border-b-2 transition-colors flex items-center justify-center gap-1.5 ${
+            activeTab === 'admissions'
+              ? 'border-red-600 text-red-700 bg-red-50 font-black'
+              : 'border-transparent text-slate-500 hover:text-slate-700 hover:bg-slate-50'
+          }`}
+        >
+          <School className="w-4 h-4 text-red-600" />
+          <span>School Admissions</span>
+          <span className="relative flex h-2 w-2 ml-0.5">
+            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
+            <span className="relative inline-flex rounded-full h-2 w-2 bg-red-600"></span>
+          </span>
         </button>
         <button
           onClick={() => setActiveTab('legacy')}
@@ -546,6 +562,8 @@ export function AdminDashboard() {
               </div>
             )}
           </div>
+        ) : activeTab === 'admissions' ? (
+          <SchoolAdmissionsManager />
         ) : null}
       </div>
 
