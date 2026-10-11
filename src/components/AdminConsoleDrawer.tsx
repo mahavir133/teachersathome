@@ -268,10 +268,14 @@ export const AdminConsoleDrawer: React.FC<AdminConsoleDrawerProps> = ({ isOpen, 
                     <h4 className="font-extrabold text-sm text-[#2C3317]">
                       {inq.parent_name || 'Parent (Name not provided)'}
                     </h4>
-                    <p className="text-[#708238] font-bold text-xs flex items-center gap-1 mt-0.5">
-                      <School className="w-3.5 h-3.5" />
-                      <span>{inq.school_name || 'General Admission Guidance'}</span>
-                    </p>
+                    <div className="flex flex-wrap gap-1 mt-1">
+                      {(inq.school_name || 'General Admission Guidance').split(', ').map((sch: string, sIdx: number) => (
+                        <span key={sIdx} className="inline-flex items-center gap-1 text-[11px] font-bold text-[#708238] bg-[#F2F4EF] px-2 py-0.5 rounded-md border border-[#E6E8E1]">
+                          <School className="w-3 h-3 text-[#708238]" />
+                          <span>{sch}</span>
+                        </span>
+                      ))}
+                    </div>
                   </div>
 
                   <div className="bg-slate-50 p-2.5 rounded-lg border border-slate-200 text-slate-700 space-y-1">

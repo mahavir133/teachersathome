@@ -11,7 +11,10 @@ import {
   Search, 
   HelpCircle,
   Headphones,
-  GraduationCap
+  GraduationCap,
+  Check,
+  Plus,
+  X
 } from 'lucide-react';
 
 export interface SchoolAdmissionItem {
@@ -121,7 +124,7 @@ export const SchoolAdmissionsSection: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [parentName, setParentName] = useState('');
   const [parentPhone, setParentPhone] = useState('');
-  const [selectedSchoolName, setSelectedSchoolName] = useState('');
+  const [selectedSchools, setSelectedSchools] = useState<string[]>([]);
   const [message, setMessage] = useState('');
   const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
@@ -133,8 +136,26 @@ export const SchoolAdmissionsSection: React.FC = () => {
     school.location.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
+  const toggleSchool = (schoolName: string) => {
+    setSelectedSchools(prev => 
+      prev.includes(schoolName)
+        ? prev.filter(name => name !== schoolName)
+        : [...prev, schoolName]
+    );
+  };
+
+  const selectAllSchools = () => {
+    setSelectedSchools(SCHOOL_ADMISSIONS.map(s => s.name));
+  };
+
+  const clearSelectedSchools = () => {
+    setSelectedSchools([]);
+  };
+
   const handleSelectSchoolForHelp = (schoolName: string) => {
-    setSelectedSchoolName(schoolName);
+    if (!selectedSchools.includes(schoolName)) {
+      setSelectedSchools(prev => [...prev, schoolName]);
+    }
     const box = document.getElementById('admission-help-box');
     if (box) {
       box.scrollIntoView({ behavior: 'smooth', block: 'center' });
@@ -151,6 +172,10 @@ export const SchoolAdmissionsSection: React.FC = () => {
     setSubmitting(true);
     setErrorMessage('');
 
+    const targetSchoolString = selectedSchools.length > 0
+      ? selectedSchools.join(', ')
+      : 'General School Guidance';
+
     try {
       const response = await fetch('/api/school-admissions/help', {
         method: 'POST',
@@ -158,7 +183,7 @@ export const SchoolAdmissionsSection: React.FC = () => {
         body: JSON.stringify({
           parentName: parentName.trim(),
           phone: parentPhone.trim(),
-          schoolName: selectedSchoolName || 'General School Guidance',
+          schoolName: targetSchoolString,
           message: message.trim()
         })
       });
@@ -181,12 +206,16 @@ export const SchoolAdmissionsSection: React.FC = () => {
   };
 
   const getWhatsAppAdminUrl = () => {
+    const schoolsText = selectedSchools.length > 0
+      ? selectedSchools.map(s => `  • ${s}`).join('\n')
+      : '  • General School Guidance';
+
     const text = encodeURIComponent(
       `Hello Teachers At Home Admin! 👋\n` +
       `I need assistance regarding school admissions:\n` +
       `• Parent Name: ${parentName || 'Parent'}\n` +
       `• Mobile: ${parentPhone || 'Not provided'}\n` +
-      `• School: ${selectedSchoolName || 'General Guidance'}\n` +
+      `• Selected Schools (${selectedSchools.length || 1}):\n${schoolsText}\n` +
       `• My Query: ${message || 'Please help me with the admission form procedure and entrance test preparation home tutor.'}`
     );
     return `https://wa.me/918340543395?text=${text}`;
@@ -281,7 +310,11 @@ export const SchoolAdmissionsSection: React.FC = () => {
               {filteredSchools.map((school) => (
                 <div
                   key={school.id}
-                  className="bg-white border-2 border-[#E2E8D8] hover:border-red-400 rounded-2xl p-4 sm:p-5 transition-all shadow-xs hover:shadow-lg group relative overflow-hidden"
+                  className={`bg-white border-2 rounded-2xl p-4 sm:p-5 transition-all shadow-xs hover:shadow-lg group relative overflow-hidden ${
+                    selectedSchools.includes(school.name)
+                      ? 'border-[#708238] ring-2 ring-[#708238]/20 bg-[#FDFFF9]'
+                      : 'border-[#E2E8D8] hover:border-red-400'
+                  }`}
                 >
                   {/* Flashing top border accent */}
                   <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-red-500 via-amber-400 to-[#708238]" />
@@ -337,10 +370,23 @@ export const SchoolAdmissionsSection: React.FC = () => {
                       <button
                         type="button"
                         onClick={() => handleSelectSchoolForHelp(school.name)}
-                        className="inline-flex items-center justify-center gap-1 px-3 py-1.5 bg-[#FAFBF7] hover:bg-[#F0F4E8] text-[#3D441E] text-[11px] font-semibold rounded-lg border border-[#D5DDC8] transition-colors cursor-pointer"
+                        className={`inline-flex items-center justify-center gap-1.5 px-3 py-1.5 text-[11px] font-bold rounded-lg border transition-all cursor-pointer ${
+                          selectedSchools.includes(school.name)
+                            ? 'bg-emerald-50 text-emerald-800 border-emerald-300 ring-1 ring-emerald-200'
+                            : 'bg-[#FAFBF7] hover:bg-[#F0F4E8] text-[#3D441E] border-[#D5DDC8]'
+                        }`}
                       >
-                        <HelpCircle className="w-3 h-3 text-[#708238]" />
-                        <span>Need Help?</span>
+                        {selectedSchools.includes(school.name) ? (
+                          <>
+                            <Check className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
+                            <span>Selected for Help</span>
+                          </>
+                        ) : (
+                          <>
+                            <Plus className="w-3.5 h-3.5 text-[#708238] shrink-0" />
+                            <span>Select for Help</span>
+                          </>
+                        )}
                       </button>
                     </div>
                   </div>
@@ -410,8 +456,26 @@ export const SchoolAdmissionsSection: React.FC = () => {
                       </h4>
                     </div>
                     <p className="text-xs text-emerald-800 leading-relaxed">
-                      Thank you <strong>{parentName || 'Parent'}</strong>. Your admission inquiry for <strong>{selectedSchoolName || 'Ranchi Schools'}</strong> has been submitted. Our Academic Admin is reviewing it and will call you at <strong>+91 {parentPhone}</strong>.
+                      Thank you <strong>{parentName || 'Parent'}</strong>. Your admission inquiry has been saved. Our Academic Admin is reviewing it and will call you at <strong>+91 {parentPhone}</strong>.
                     </p>
+
+                    {selectedSchools.length > 0 && (
+                      <div className="pt-1">
+                        <div className="text-[10px] font-bold text-emerald-900 uppercase tracking-wide mb-1.5">
+                          Selected Schools ({selectedSchools.length}):
+                        </div>
+                        <div className="flex flex-wrap gap-1.5 justify-center max-h-24 overflow-y-auto">
+                          {selectedSchools.map((schoolName, idx) => (
+                            <span
+                              key={idx}
+                              className="px-2 py-0.5 bg-white border border-emerald-300 rounded-full text-[10px] font-semibold text-emerald-900 shadow-2xs"
+                            >
+                              ✓ {schoolName}
+                            </span>
+                          ))}
+                        </div>
+                      </div>
+                    )}
 
                     <div className="pt-2 flex flex-col gap-2">
                       <a
@@ -430,6 +494,7 @@ export const SchoolAdmissionsSection: React.FC = () => {
                           setSubmitted(false);
                           setMessage('');
                           setSubmittedRequestId('');
+                          setSelectedSchools([]);
                         }}
                         className="text-xs font-semibold text-slate-500 hover:text-slate-800 underline pt-1"
                       >
@@ -480,22 +545,68 @@ export const SchoolAdmissionsSection: React.FC = () => {
                       </div>
                     </div>
 
+                    {/* Multi-School Selection */}
                     <div>
-                      <label className="block text-xs font-bold text-[#2C3317] mb-1">
-                        School You Need Help With
-                      </label>
-                      <select
-                        value={selectedSchoolName}
-                        onChange={(e) => setSelectedSchoolName(e.target.value)}
-                        className="w-full px-3 py-2 text-xs rounded-xl border border-[#D5DDC8] focus:outline-none focus:ring-2 focus:ring-[#708238] bg-white text-[#2C3317]"
-                      >
-                        <option value="">-- General Admission & Entrance Query --</option>
-                        {SCHOOL_ADMISSIONS.map(s => (
-                          <option key={s.id} value={s.name}>
-                            {s.id}. {s.name}
-                          </option>
-                        ))}
-                      </select>
+                      <div className="flex items-center justify-between mb-1.5">
+                        <label className="block text-xs font-bold text-[#2C3317]">
+                          Select Schools for Help <span className="text-[#708238]">({selectedSchools.length} Selected)</span>
+                        </label>
+                        <div className="flex items-center gap-2 text-[10px] font-bold">
+                          <button
+                            type="button"
+                            onClick={selectAllSchools}
+                            className="text-[#708238] hover:underline cursor-pointer"
+                          >
+                            Select All (10)
+                          </button>
+                          {selectedSchools.length > 0 && (
+                            <>
+                              <span className="text-slate-300">•</span>
+                              <button
+                                type="button"
+                                onClick={clearSelectedSchools}
+                                className="text-red-500 hover:underline cursor-pointer"
+                              >
+                                Clear
+                              </button>
+                            </>
+                          )}
+                        </div>
+                      </div>
+
+                      {/* Scrollable list with checkboxes */}
+                      <div className="max-h-48 overflow-y-auto p-1.5 bg-slate-50 border border-[#D5DDC8] rounded-2xl space-y-1.5">
+                        {SCHOOL_ADMISSIONS.map(s => {
+                          const isChecked = selectedSchools.includes(s.name);
+                          return (
+                            <div
+                              key={s.id}
+                              onClick={() => toggleSchool(s.name)}
+                              className={`flex items-start gap-2 p-2 rounded-xl text-xs cursor-pointer transition-all border ${
+                                isChecked
+                                  ? 'bg-[#F2F6EC] border-[#708238] text-[#2C3317] font-semibold shadow-2xs'
+                                  : 'bg-white border-slate-200 text-slate-700 hover:bg-slate-100'
+                              }`}
+                            >
+                              <div className={`w-4 h-4 rounded mt-0.5 flex items-center justify-center shrink-0 border transition-colors ${
+                                isChecked ? 'bg-[#708238] border-[#708238] text-white' : 'border-slate-300 bg-white'
+                              }`}>
+                                {isChecked && <Check className="w-3 h-3 stroke-[3]" />}
+                              </div>
+                              <div className="flex-1 leading-snug">
+                                <div className="font-bold">{s.id}. {s.name}</div>
+                                <div className="text-[10px] text-slate-500 font-normal">{s.location} • <span className="text-[#708238]">{s.board}</span></div>
+                              </div>
+                            </div>
+                          );
+                        })}
+                      </div>
+
+                      <p className="text-[10px] text-slate-500 mt-1 italic">
+                        {selectedSchools.length > 0
+                          ? `✓ Selected ${selectedSchools.length} school${selectedSchools.length > 1 ? 's' : ''}. You can select more above.`
+                          : '💡 Tip: Click any school above to select, or leave unselected for general admission guidance.'}
+                      </p>
                     </div>
 
                     <div>
