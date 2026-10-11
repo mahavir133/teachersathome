@@ -468,3 +468,125 @@ export async function updateAdmissionHelpRequestStatus(id: string, status: strin
   }
 }
 
+export async function initSiteAnalyticsTable(): Promise<void> {
+  const query = `
+    CREATE TABLE IF NOT EXISTS site_analytics (
+      id VARCHAR(50) PRIMARY KEY,
+      page_path VARCHAR(255) NOT NULL,
+      event_type VARCHAR(50) NOT NULL DEFAULT 'page_view',
+      event_label VARCHAR(255),
+      device_type VARCHAR(50) DEFAULT 'Desktop',
+      browser VARCHAR(50) DEFAULT 'Unknown',
+      referrer VARCHAR(255) DEFAULT 'Direct',
+      session_id VARCHAR(100),
+      ip_address VARCHAR(100),
+      created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+      INDEX idx_created_at (created_at),
+      INDEX idx_event_type (event_type),
+      INDEX idx_session_id (session_id)
+    )
+  `;
+  await pool.query(query);
+}
+
+export async function recordSiteEvent(event: {
+  id: string;
+  page_path: string;
+  event_type: string;
+  event_label?: string | null;
+  device_type?: string;
+  browser?: string;
+  referrer?: string;
+  session_id?: string;
+  ip_address?: string;
+}): Promise<void> {
+  await initSiteAnalyticsTable();
+  const query = `
+    INSERT INTO site_analytics (id, page_path, event_type, event_label, device_type, browser, referrer, session_id, ip_address, created_at)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, NOW())
+  `;
+  await pool.execute(query, [
+    event.id,
+    event.page_path,
+    event.event_type,
+    event.event_label || null,
+    event.device_type || 'Desktop',
+    event.browser || 'Unknown',
+    event.referrer || 'Direct',
+    event.session_id || null,
+    event.ip_address || null
+  ]);
+}
+
+export async function getSiteTrackerStats(): Promise<{
+  summary: {
+    totalPageViews: number;
+    todayPageViews: number;
+    totalVisitors: number;
+    todayVisitors: number;
+    totalSchoolClicks: number;
+    totalHelpQueries: number;
+  };
+  topSchools: { name: string; clicks: number }[];
+  devices: { device: string; count: number }[];
+  eventsBreakdown: { type: string; count: number }[];
+  recentEvents: any[];
+}> {
+  await initSiteAnalyticsTable();
+
+  // Summary counts
+  const [[totalViewsRow]] = await pool.query('SELECT COUNT(*) as count FROM site_analytics WHERE event_type = "page_view"') as any;
+  const [[todayViewsRow]] = await pool.query('SELECT COUNT(*) as count FROM site_analytics WHERE event_type = "page_view" AND DATE(created_at) = CURDATE()') as any;
+  const [[totalVisitorsRow]] = await pool.query('SELECT COUNT(DISTINCT session_id) as count FROM site_analytics WHERE session_id IS NOT NULL') as any;
+  const [[todayVisitorsRow]] = await pool.query('SELECT COUNT(DISTINCT session_id) as count FROM site_analytics WHERE session_id IS NOT NULL AND DATE(created_at) = CURDATE()') as any;
+  const [[totalSchoolClicksRow]] = await pool.query('SELECT COUNT(*) as count FROM site_analytics WHERE event_type = "school_form_click"') as any;
+  const [[totalHelpQueriesRow]] = await pool.query('SELECT COUNT(*) as count FROM admission_help_requests') as any;
+
+  // Top School Clicks
+  const [topSchoolsRows] = await pool.query(`
+    SELECT event_label as name, COUNT(*) as clicks
+    FROM site_analytics
+    WHERE event_type = 'school_form_click' AND event_label IS NOT NULL
+    GROUP BY event_label
+    ORDER BY clicks DESC
+    LIMIT 10
+  `) as any;
+
+  // Devices
+  const [deviceRows] = await pool.query(`
+    SELECT device_type as device, COUNT(*) as count
+    FROM site_analytics
+    GROUP BY device_type
+  `) as any;
+
+  // Event types
+  const [eventRows] = await pool.query(`
+    SELECT event_type as type, COUNT(*) as count
+    FROM site_analytics
+    GROUP BY event_type
+  `) as any;
+
+  // Recent 50 events
+  const [recentRows] = await pool.query(`
+    SELECT id, page_path, event_type, event_label, device_type, browser, referrer, created_at
+    FROM site_analytics
+    ORDER BY created_at DESC
+    LIMIT 50
+  `) as any;
+
+  return {
+    summary: {
+      totalPageViews: Number(totalViewsRow?.count || 0),
+      todayPageViews: Number(todayViewsRow?.count || 0),
+      totalVisitors: Number(totalVisitorsRow?.count || 0),
+      todayVisitors: Number(todayVisitorsRow?.count || 0),
+      totalSchoolClicks: Number(totalSchoolClicksRow?.count || 0),
+      totalHelpQueries: Number(totalHelpQueriesRow?.count || 0)
+    },
+    topSchools: topSchoolsRows.map((r: any) => ({ name: r.name, clicks: Number(r.clicks) })),
+    devices: deviceRows.map((r: any) => ({ device: r.device || 'Desktop', count: Number(r.count) })),
+    eventsBreakdown: eventRows.map((r: any) => ({ type: r.type, count: Number(r.count) })),
+    recentEvents: recentRows
+  };
+}
+

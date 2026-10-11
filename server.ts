@@ -27,7 +27,7 @@ const ai = new GoogleGenAI({
   }
 });
 
-import { pool, getTutors, getParentRequests, getTutorApplications, addParentRequest, addTutorApplication, approveTutorApplication, rejectTutorApplication, updateParentRequestStatus, getUserByEmail, createUser, getParentRequestsByUserId, getTutorApplicationByUserId, getTutorByUserId, linkParentRequests, linkTutorApplications, addLegacyTutor, getAssignments, createAssignment, getFeeCollections, addFeeCollection, getMonthlyFeeStats, updateAssignment, deleteAssignment, updateFeeCollection, deleteFeeCollection, getParentAssignmentsByUserId, getTutorAssignmentsByUserId, getParentFeeCollectionsByUserId, getTutorFeeCollectionsByUserId, getAttendanceByAssignment, markAttendance, addGrievance, getGrievancesByUserId, getAllGrievances, updateGrievanceStatus, getAllAttendance, addAdmissionHelpRequest, getAdmissionHelpRequests, updateAdmissionHelpRequestStatus } from "./db.js";
+import { pool, getTutors, getParentRequests, getTutorApplications, addParentRequest, addTutorApplication, approveTutorApplication, rejectTutorApplication, updateParentRequestStatus, getUserByEmail, createUser, getParentRequestsByUserId, getTutorApplicationByUserId, getTutorByUserId, linkParentRequests, linkTutorApplications, addLegacyTutor, getAssignments, createAssignment, getFeeCollections, addFeeCollection, getMonthlyFeeStats, updateAssignment, deleteAssignment, updateFeeCollection, deleteFeeCollection, getParentAssignmentsByUserId, getTutorAssignmentsByUserId, getParentFeeCollectionsByUserId, getTutorFeeCollectionsByUserId, getAttendanceByAssignment, markAttendance, addGrievance, getGrievancesByUserId, getAllGrievances, updateGrievanceStatus, getAllAttendance, addAdmissionHelpRequest, getAdmissionHelpRequests, updateAdmissionHelpRequestStatus, recordSiteEvent, getSiteTrackerStats } from "./db.js";
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 
@@ -525,6 +525,44 @@ app.post("/api/school-admissions/help/status", async (req, res) => {
   } catch (error: any) {
     console.error("Error updating admission help status:", error);
     res.status(500).json({ error: "Failed to update status" });
+  }
+});
+
+app.post("/api/track", async (req, res) => {
+  try {
+    const { page_path, event_type, event_label, device_type, browser, referrer, session_id } = req.body;
+    const ip = req.headers['x-forwarded-for'] || req.socket.remoteAddress || '127.0.0.1';
+    const clientIp = typeof ip === 'string' ? ip.split(',')[0].trim() : '127.0.0.1';
+
+    const event = {
+      id: 'TRK-' + Math.floor(100000 + Math.random() * 900000) + '-' + Date.now().toString(36),
+      page_path: page_path || '/',
+      event_type: event_type || 'page_view',
+      event_label: event_label || null,
+      device_type: device_type || 'Desktop',
+      browser: browser || 'Unknown',
+      referrer: referrer || 'Direct',
+      session_id: session_id || null,
+      ip_address: clientIp
+    };
+
+    // Non-blocking write to analytics
+    await recordSiteEvent(event);
+    res.json({ success: true });
+  } catch (err: any) {
+    // Analytics failures should never crash or throw 500s to clients
+    console.error("Tracker recording error:", err.message);
+    res.json({ success: false });
+  }
+});
+
+app.get("/api/admin/site-tracker", async (_req, res) => {
+  try {
+    const stats = await getSiteTrackerStats();
+    res.json(stats);
+  } catch (error: any) {
+    console.error("Error fetching site tracker stats:", error);
+    res.status(500).json({ error: "Failed to load site tracker stats" });
   }
 });
 

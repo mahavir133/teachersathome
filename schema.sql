@@ -91,3 +91,19 @@ CREATE TABLE IF NOT EXISTS admission_help_requests (
     user_id VARCHAR(50),
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP
 );
+
+CREATE TABLE IF NOT EXISTS site_analytics (
+    id VARCHAR(50) PRIMARY KEY,
+    page_path VARCHAR(255) NOT NULL,
+    event_type VARCHAR(50) NOT NULL DEFAULT 'page_view',
+    event_label VARCHAR(255),
+    device_type VARCHAR(50) DEFAULT 'Desktop',
+    browser VARCHAR(50) DEFAULT 'Unknown',
+    referrer VARCHAR(255) DEFAULT 'Direct',
+    session_id VARCHAR(100),
+    ip_address VARCHAR(100),
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    INDEX idx_created_at (created_at),
+    INDEX idx_event_type (event_type),
+    INDEX idx_session_id (session_id)
+);

@@ -1,14 +1,14 @@
 import React, { useState } from 'react';
-import { 
-  ExternalLink, 
-  School, 
-  MapPin, 
-  Send, 
-  MessageSquare, 
-  Phone, 
-  CheckCircle2, 
-  AlertCircle, 
-  Search, 
+import {
+  ExternalLink,
+  School,
+  MapPin,
+  Send,
+  MessageSquare,
+  Phone,
+  CheckCircle2,
+  AlertCircle,
+  Search,
   HelpCircle,
   Headphones,
   GraduationCap,
@@ -16,6 +16,7 @@ import {
   Plus,
   X
 } from 'lucide-react';
+import { trackEvent } from '../utils/siteTracker';
 
 export interface SchoolAdmissionItem {
   id: number;
@@ -239,9 +240,9 @@ export const SchoolAdmissionsSection: React.FC = () => {
                   <span className="relative inline-flex rounded-full h-3 w-3 bg-yellow-300"></span>
                 </span>
                 <span className="animate-pulse bg-white/20 px-2 py-0.5 rounded text-[11px] uppercase tracking-wider font-extrabold">
-                  FLASHING UPDATE 2026-27
+                  FLASHING UPDATE 2027-28
                 </span>
-                <span>RANCHI TOP SCHOOL ADMISSIONS OPEN! FILL FORMS ONLINE</span>
+                <span>RANCHI TOP SCHOOL ADMISSIONS 2027-28 OPEN! FILL FORMS ONLINE</span>
               </span>
               <span className="text-yellow-200">★ Tender Heart</span>
               <span className="text-yellow-200">★ Cambrian Public</span>
@@ -270,7 +271,7 @@ export const SchoolAdmissionsSection: React.FC = () => {
               <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
               <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-red-600"></span>
             </span>
-            <span className="tracking-wide uppercase">🔴 LIVE ADMISSION PORTALS OPEN NOW</span>
+            <span className="tracking-wide uppercase">🔴 LIVE ADMISSION PORTALS OPEN NOW (SESSION 2027-28)</span>
           </div>
 
           <h2 className="text-2xl sm:text-3xl lg:text-4xl font-black text-[#2C3317] tracking-tight">
@@ -303,7 +304,7 @@ export const SchoolAdmissionsSection: React.FC = () => {
                 <School className="w-4 h-4" />
                 <span>Showing {filteredSchools.length} Official Admission Portals</span>
               </span>
-              <span className="text-xs text-[#5C6348]">Updated for Academic Session 2026-27</span>
+              <span className="text-xs text-[#5C6348]">Updated for Academic Session 2027-28</span>
             </div>
 
             <div className="grid grid-cols-1 gap-3.5 max-h-[780px] overflow-y-auto pr-1">
@@ -361,6 +362,7 @@ export const SchoolAdmissionsSection: React.FC = () => {
                         href={school.url}
                         target="_blank"
                         rel="noopener noreferrer"
+                        onClick={() => trackEvent('school_form_click', school.name, { url: school.url })}
                         className="flex-1 sm:flex-none inline-flex items-center justify-center gap-1.5 px-4 py-2.5 bg-red-600 hover:bg-red-700 active:scale-95 text-white text-xs sm:text-sm font-bold rounded-xl shadow-md transition-all group-hover:shadow-red-200 cursor-pointer text-center"
                       >
                         <span>Fill Form</span>
@@ -638,6 +640,7 @@ export const SchoolAdmissionsSection: React.FC = () => {
                         href={getWhatsAppAdminUrl()}
                         target="_blank"
                         rel="noopener noreferrer"
+                        onClick={() => trackEvent('whatsapp_click', 'Admission Help WhatsApp', { selectedSchools })}
                         className="flex-1 py-2 px-2.5 bg-[#25D366]/10 hover:bg-[#25D366]/20 text-[#128C7E] border border-[#25D366]/30 rounded-xl text-[11px] font-bold flex items-center justify-center gap-1.5 transition-colors cursor-pointer text-center"
                       >
                         <MessageSquare className="w-3.5 h-3.5 text-[#25D366]" />
@@ -646,6 +649,7 @@ export const SchoolAdmissionsSection: React.FC = () => {
 
                       <a
                         href="tel:+918340543395"
+                        onClick={() => trackEvent('phone_call_click', '+918340543395')}
                         className="flex-1 py-2 px-2.5 bg-[#2C3317]/5 hover:bg-[#2C3317]/10 text-[#2C3317] border border-[#2C3317]/20 rounded-xl text-[11px] font-bold flex items-center justify-center gap-1.5 transition-colors cursor-pointer text-center"
                       >
                         <Phone className="w-3.5 h-3.5 text-[#708238]" />

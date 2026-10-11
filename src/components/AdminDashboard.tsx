@@ -7,12 +7,13 @@ import { FeeManager } from './FeeManager';
 import { SchoolAdmissionsManager } from './SchoolAdmissionsManager';
 import { useAuth } from '../AuthContext';
 import { AttendanceCalendar } from './AttendanceCalendar';
-import { AlertTriangle, Calendar, Target, Activity } from 'lucide-react';
+import { AlertTriangle, Calendar, Target, Activity, BarChart3 } from 'lucide-react';
 import { AdvancedDashboard } from './AdvancedDashboard';
+import { SiteTrackerDashboard } from './SiteTrackerDashboard';
 
 export function AdminDashboard() {
   const { token } = useAuth();
-  const [activeTab, setActiveTab] = useState<'overview' | 'requests' | 'applications' | 'admissions' | 'legacy' | 'assignments' | 'fees' | 'grievances' | 'rectification'>('overview');
+  const [activeTab, setActiveTab] = useState<'overview' | 'tracker' | 'requests' | 'applications' | 'admissions' | 'legacy' | 'assignments' | 'fees' | 'grievances' | 'rectification'>('overview');
   const [requests, setRequests] = useState<ParentRequest[]>([]);
   const [applications, setApplications] = useState<any[]>([]);
   const [tutors, setTutors] = useState<any[]>([]);
@@ -146,6 +147,21 @@ export function AdminDashboard() {
           Overview
         </button>
         <button
+          onClick={() => setActiveTab('tracker')}
+          className={`flex-1 min-w-[140px] py-3 text-center border-b-2 transition-colors flex items-center justify-center gap-1.5 ${
+            activeTab === 'tracker'
+              ? 'border-indigo-600 text-indigo-700 bg-indigo-50 font-black'
+              : 'border-transparent text-slate-500 hover:text-slate-700 hover:bg-slate-50'
+          }`}
+        >
+          <BarChart3 className="w-4 h-4 text-indigo-600" />
+          <span>Site Tracker</span>
+          <span className="relative flex h-2 w-2 ml-0.5">
+            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+            <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+          </span>
+        </button>
+        <button
           onClick={() => setActiveTab('requests')}
           className={`flex-1 py-3 text-center border-b-2 transition-colors ${
             activeTab === 'requests'
@@ -236,6 +252,8 @@ export function AdminDashboard() {
       <div className="bg-slate-50 border border-slate-200 rounded-xl p-4 min-h-[400px]">
         {loading ? (
           <div className="text-center py-16 text-slate-500">Loading operational logs...</div>
+        ) : activeTab === 'tracker' ? (
+          <SiteTrackerDashboard />
         ) : activeTab === 'overview' ? (
           <AdvancedDashboard 
             onNavigate={(tab, filter) => {

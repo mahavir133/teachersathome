@@ -21,6 +21,7 @@ import { VidyaMitraChatbot } from './components/VidyaMitraChatbot';
 import { Routes, Route } from 'react-router-dom';
 import { AuthModal } from './components/AuthModal';
 import { Dashboard } from './pages/Dashboard';
+import { trackPageView } from './utils/siteTracker';
 
 function LandingPage() {
   const [tutors, setTutors] = useState<Tutor[]>([]);
@@ -35,9 +36,9 @@ function LandingPage() {
       console.error("Failed to load dynamic tutors", e);
     }
   };
-
   useEffect(() => {
     fetchTutors();
+    trackPageView('/');
   }, []);
 
 
@@ -116,7 +117,7 @@ function LandingPage() {
           onExploreTutors={() => scrollToSection('tutors')}
         />
 
-        {/* Ranchi School Admissions 2026-27 Portal Links & Admin Help Message Box */}
+        {/* Ranchi School Admissions 2027-28 Portal Links & Admin Help Message Box */}
         <SchoolAdmissionsSection />
 
         {/* Why Choose Us */}
