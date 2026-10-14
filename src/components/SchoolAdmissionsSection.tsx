@@ -118,6 +118,24 @@ export const SCHOOL_ADMISSIONS: SchoolAdmissionItem[] = [
     board: 'ICSE / State Recognized',
     classes: 'KG to Std. X',
     badge: 'Apply via Canvas'
+  },
+  {
+    id: 11,
+    name: 'Taurian World School',
+    location: 'Knowledge City, Hazam, Ranchi',
+    url: 'https://forms.edunexttechnologies.com/forms/taurian/registration/',
+    board: 'CBSE Affiliated',
+    classes: 'Nursery to Std. XII',
+    badge: 'Registration Open'
+  },
+  {
+    id: 12,
+    name: 'St. Thomas School',
+    location: 'Sector III, Dhurwa, Ranchi',
+    url: 'https://onlineregistration.stthomasschoolranchi.com/reg_stthomas/adm_nur/New_reg_form',
+    board: 'CISCE / ICSE Board',
+    classes: 'Nursery to Std. XII',
+    badge: 'Nursery Reg Open'
   }
 ];
 
@@ -254,6 +272,8 @@ export const SchoolAdmissionsSection: React.FC = () => {
               <span className="text-yellow-200">★ Guru Gobind Singh</span>
               <span className="text-yellow-200">★ Sarala Birla</span>
               <span className="text-yellow-200">★ St. John's</span>
+              <span className="text-yellow-200">★ Taurian World</span>
+              <span className="text-yellow-200">★ St. Thomas</span>
               <span className="bg-yellow-300 text-red-900 px-2.5 py-0.5 rounded-full text-xs font-black">
                 CLICK ANY SCHOOL BELOW TO APPLY ↗
               </span>
@@ -559,7 +579,7 @@ export const SchoolAdmissionsSection: React.FC = () => {
                             onClick={selectAllSchools}
                             className="text-[#708238] hover:underline cursor-pointer"
                           >
-                            Select All (10)
+                            Select All ({SCHOOL_ADMISSIONS.length})
                           </button>
                           {selectedSchools.length > 0 && (
                             <>
