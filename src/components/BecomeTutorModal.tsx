@@ -21,6 +21,7 @@ export const BecomeTutorModal: React.FC<BecomeTutorModalProps> = ({ isOpen, onCl
   const [cities, setCities] = useState<string[]>(['Ranchi']);
   const [preferredMode, setPreferredMode] = useState<TeachingModeType>('Home Tuition');
   const [bio, setBio] = useState('');
+  const [termsAccepted, setTermsAccepted] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [submittedApp, setSubmittedApp] = useState<any | null>(null);
 
@@ -49,6 +50,11 @@ export const BecomeTutorModal: React.FC<BecomeTutorModalProps> = ({ isOpen, onCl
     e.preventDefault();
     if (!fullName.trim() || !phone.trim() || phone.length < 10) {
       alert('Please provide your full name and a valid 10-digit mobile number.');
+      return;
+    }
+
+    if (!termsAccepted) {
+      alert('Please agree to the Teacher Declaration, Terms & Conditions to proceed.');
       return;
     }
 
@@ -292,10 +298,83 @@ export const BecomeTutorModal: React.FC<BecomeTutorModalProps> = ({ isOpen, onCl
                 />
               </div>
 
+              {/* Teacher Declaration, Terms & Conditions */}
+              <div className="bg-[#F8F9F5] border border-[#D1D5CB] rounded-xl p-3.5 space-y-2.5">
+                <div className="flex items-center justify-between">
+                  <h4 className="font-extrabold text-[#2C3317] text-xs uppercase tracking-wide">
+                    Teacher Declaration, Terms & Conditions
+                  </h4>
+                  <span className="text-[10px] text-[#708238] font-bold bg-[#E9EDDE] px-2 py-0.5 rounded-full">
+                    Required
+                  </span>
+                </div>
+
+                <div className="max-h-40 overflow-y-auto pr-1 text-[11px] text-slate-700 space-y-2 border border-[#E6E8E1] bg-white rounded-lg p-3 leading-relaxed shadow-inner">
+                  <p className="font-semibold text-[#2C3317]">
+                    Please read the following Terms & Conditions carefully before submitting your application:
+                  </p>
+                  <ol className="list-decimal pl-4 space-y-1.5 text-[11px]">
+                    <li>
+                      <strong className="text-slate-900">Accuracy of Information:</strong> I confirm that all personal details, educational qualifications, experience, identity documents, and other information submitted during registration are true and accurate.
+                    </li>
+                    <li>
+                      <strong className="text-slate-900">Verification:</strong> I agree to provide valid identity and qualification documents and understand that Teachers at Home may verify the information provided before assigning tuition.
+                    </li>
+                    <li>
+                      <strong className="text-slate-900">Professional Conduct:</strong> I will maintain punctuality, discipline, honesty, and professional behaviour while teaching students and communicating with parents.
+                    </li>
+                    <li>
+                      <strong className="text-slate-900">Student Safety:</strong> I will ensure the safety, dignity, and well-being of students and will not engage in any form of physical punishment, harassment, discrimination, or inappropriate behaviour.
+                    </li>
+                    <li>
+                      <strong className="text-slate-900">Tuition Responsibilities:</strong> I will follow the agreed tuition schedule, subjects, syllabus, and teaching commitments. I will inform the concerned parent and Teachers at Home promptly if I am unable to attend a scheduled class.
+                    </li>
+                    <li>
+                      <strong className="text-slate-900">Fees and Payments:</strong> I will follow the fee arrangements and payment procedures communicated by Teachers at Home. I will not make unauthorised fee demands or misrepresent any payment-related terms to parents.
+                    </li>
+                    <li>
+                      <strong className="text-slate-900">Confidentiality:</strong> I will maintain the confidentiality of students’ and parents’ personal information, contact details, academic records, and other private information and will not disclose or misuse them.
+                    </li>
+                    <li>
+                      <strong className="text-slate-900">Communication and Complaints:</strong> I will maintain respectful communication with parents and promptly report any serious concern, dispute, or incident related to the tuition.
+                    </li>
+                    <li>
+                      <strong className="text-slate-900">Changes or Discontinuation:</strong> I will provide reasonable prior notice to the concerned parent and Teachers at Home before discontinuing an assigned tuition, except in emergencies or circumstances beyond my control.
+                    </li>
+                    <li>
+                      <strong className="text-slate-900">Independent Teaching Engagement:</strong> I understand that registration does not guarantee tuition assignments. Any applicable service charges, commission, or other financial terms must be communicated and agreed upon separately before they apply.
+                    </li>
+                    <li>
+                      <strong className="text-slate-900">Termination of Association:</strong> Teachers at Home may suspend or discontinue my association in cases of verified misconduct, false information, breach of student safety, or violation of these terms, after appropriate review.
+                    </li>
+                    <li>
+                      <strong className="text-slate-900">Acceptance:</strong> I understand that these terms are intended to establish a safe, transparent, and professional teaching environment. I agree to comply with them and understand that violations may result in the termination of my association with Teachers at Home, subject to applicable law.
+                    </li>
+                  </ol>
+                </div>
+
+                <label className="flex items-start gap-2.5 pt-1 cursor-pointer select-none">
+                  <input
+                    type="checkbox"
+                    checked={termsAccepted}
+                    onChange={(e) => setTermsAccepted(e.target.checked)}
+                    required
+                    className="mt-0.5 w-4 h-4 rounded text-[#708238] border-[#D1D5CB] focus:ring-[#708238] cursor-pointer shrink-0"
+                  />
+                  <span className="text-xs font-semibold text-[#2C3317] leading-tight">
+                    I have read, understood, and agree to the following Terms & Conditions for joining Teachers at Home
+                  </span>
+                </label>
+              </div>
+
               <button
                 type="submit"
-                disabled={submitting}
-                className="w-full py-3.5 bg-[#708238] hover:bg-[#5A692D] text-white font-extrabold text-sm rounded-full transition-all cursor-pointer"
+                disabled={submitting || !termsAccepted}
+                className={`w-full py-3.5 text-white font-extrabold text-sm rounded-full transition-all cursor-pointer ${
+                  submitting || !termsAccepted
+                    ? 'bg-slate-400 cursor-not-allowed'
+                    : 'bg-[#708238] hover:bg-[#5A692D]'
+                }`}
               >
                 {submitting ? 'Submitting Application...' : 'Submit Tutor Registration Application'}
               </button>
