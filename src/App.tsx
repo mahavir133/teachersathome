@@ -8,6 +8,7 @@ import { BoardCategoryGrid } from './components/BoardCategoryGrid';
 import { HowItWorks } from './components/HowItWorks';
 import { CoverageCities } from './components/CoverageCities';
 import { SchoolAdmissionsSection } from './components/SchoolAdmissionsSection';
+import { AdmissionsMarquee } from './components/AdmissionsMarquee';
 
 import { FAQ } from './components/FAQ';
 import { ContactSection } from './components/ContactSection';
@@ -108,6 +109,9 @@ function LandingPage() {
         setActiveSection={setActiveSection}
         myRequestsCount={0}
       />
+
+      {/* Top Ranchi School Admissions Marquee Just Below Header */}
+      <AdmissionsMarquee />
 
       {/* Main Content Sections */}
       <main>

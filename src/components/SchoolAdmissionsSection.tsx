@@ -136,6 +136,51 @@ export const SCHOOL_ADMISSIONS: SchoolAdmissionItem[] = [
     board: 'CISCE / ICSE Board',
     classes: 'Nursery to Std. XII',
     badge: 'Nursery Reg Open'
+  },
+  {
+    id: 13,
+    name: 'Oxford Public School',
+    location: 'Old H.B. Road, Pragati Path, Ranchi',
+    url: 'https://oxfordjr.schoolerp.org/School/OnlineForm/FormRegistration.aspx',
+    board: 'CBSE Affiliated',
+    classes: 'Prep / Nursery to Std. XII',
+    badge: 'Registration Open'
+  },
+  {
+    id: 14,
+    name: 'GD Goenka Public School',
+    location: 'Namkum, Ranchi',
+    url: 'https://www.admissiontree.in/schools/gd-goenka-public-school-ranchi?utm_source=439',
+    board: 'CBSE Affiliated',
+    classes: 'Nursery to Std. XII',
+    badge: 'Admissions Open'
+  },
+  {
+    id: 15,
+    name: 'Bishop Westcott Girls School',
+    location: 'Doranda, Ranchi',
+    url: 'https://forms.edunexttechnologies.com/forms/bishop-westcott-girls-school/enquiry-registration/Registration-new/',
+    board: 'CISCE / ICSE Board',
+    classes: 'KG to Std. XII',
+    badge: 'Online Enquiry & Reg'
+  },
+  {
+    id: 16,
+    name: 'Delhi Public School (DPS)',
+    location: 'Sail Township, Dhurwa, Ranchi',
+    url: 'https://www.dpsranchi.com/application-form-link',
+    board: 'CBSE Affiliated',
+    classes: 'Nursery to Std. XII',
+    badge: 'Application Form'
+  },
+  {
+    id: 17,
+    name: 'Loreto Convent School',
+    location: 'Doranda, Ranchi',
+    url: 'https://www.loretodoranda.org/Online_Registration/',
+    board: 'CISCE / ICSE Board',
+    classes: 'Nursery to Std. XII',
+    badge: 'Online Registration'
   }
 ];
 
@@ -247,40 +292,6 @@ export const SchoolAdmissionsSection: React.FC = () => {
       <div className="absolute top-0 right-0 w-80 h-80 bg-red-100/40 rounded-full blur-3xl pointer-events-none" />
       <div className="absolute bottom-0 left-0 w-80 h-80 bg-[#708238]/10 rounded-full blur-3xl pointer-events-none" />
 
-      {/* Flashing Running Marquee Ticker */}
-      <div className="bg-gradient-to-r from-red-600 via-rose-600 to-amber-600 text-white py-2.5 px-4 mb-8 sm:mb-12 shadow-md overflow-hidden relative">
-        <div className="animate-marquee whitespace-nowrap flex items-center gap-8 text-xs sm:text-sm font-bold tracking-wide">
-          {Array.from({ length: 3 }).map((_, repeatIdx) => (
-            <React.Fragment key={repeatIdx}>
-              <span className="flex items-center gap-2">
-                <span className="relative flex h-3 w-3">
-                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-white opacity-75"></span>
-                  <span className="relative inline-flex rounded-full h-3 w-3 bg-yellow-300"></span>
-                </span>
-                <span className="animate-pulse bg-white/20 px-2 py-0.5 rounded text-[11px] uppercase tracking-wider font-extrabold">
-                  FLASHING UPDATE 2027-28
-                </span>
-                <span>RANCHI TOP SCHOOL ADMISSIONS 2027-28 OPEN! FILL FORMS ONLINE</span>
-              </span>
-              <span className="text-yellow-200">★ Tender Heart</span>
-              <span className="text-yellow-200">★ Cambrian Public</span>
-              <span className="text-yellow-200">★ Guru Nanak</span>
-              <span className="text-yellow-200">★ Manan Vidya</span>
-              <span className="text-yellow-200">★ Carmel School</span>
-              <span className="text-yellow-200">★ Lady K.C. Roy</span>
-              <span className="text-yellow-200">★ Firayalal Public</span>
-              <span className="text-yellow-200">★ Guru Gobind Singh</span>
-              <span className="text-yellow-200">★ Sarala Birla</span>
-              <span className="text-yellow-200">★ St. John's</span>
-              <span className="text-yellow-200">★ Taurian World</span>
-              <span className="text-yellow-200">★ St. Thomas</span>
-              <span className="bg-yellow-300 text-red-900 px-2.5 py-0.5 rounded-full text-xs font-black">
-                CLICK ANY SCHOOL BELOW TO APPLY ↗
-              </span>
-            </React.Fragment>
-          ))}
-        </div>
-      </div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         
