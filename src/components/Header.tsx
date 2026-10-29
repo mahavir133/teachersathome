@@ -99,12 +99,6 @@ export const Header: React.FC<HeaderProps> = ({
             <span>School Admissions 2027-28</span>
           </button>
           <button 
-            onClick={() => scrollTo('tutors')} 
-            className={`hover:text-[#708238] transition-colors ${activeSection === 'tutors' ? 'text-[#708238] font-bold' : ''}`}
-          >
-            Find Tutors
-          </button>
-          <button 
             onClick={() => scrollTo('fee-calculator')} 
             className={`hover:text-[#708238] transition-colors ${activeSection === 'fee-calculator' ? 'text-[#708238] font-bold' : ''}`}
           >
@@ -226,12 +220,6 @@ export const Header: React.FC<HeaderProps> = ({
                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
                 <span className="relative inline-flex rounded-full h-2 w-2 bg-red-600"></span>
               </span>
-            </button>
-            <button 
-              onClick={() => scrollTo('tutors')} 
-              className="text-left py-1.5 px-2 hover:bg-[#F2F4EF] rounded-md font-semibold"
-            >
-              Find Tutors Directory
             </button>
             <button 
               onClick={() => scrollTo('fee-calculator')} 
